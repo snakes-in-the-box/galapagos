@@ -85,18 +85,18 @@ object Tree {
     }
   }
 
-  def combineTrees(p1: Tree, oldNode: Tree, newNode: Tree) : Tree = {
-    //println("combTrees: p1 = " + printFunction(p1) + "\told = " + printFunction(oldNode) + "\tnew = " + printFunction(newNode))
-    if (p1 == oldNode) {
+  def combineTrees(t: Tree, oldNode: Tree, newNode: Tree) : Tree = {
+    //println("combTrees: t = " + printFunction(t) + "\told = " + printFunction(oldNode) + "\tnew = " + printFunction(newNode))
+    if (t == oldNode) {
       //println("if")
       newNode
     }
     else {
-      p1 match {
+      t match {
         case Node(l, r, op) =>
           //println("Node")
           Node(combineTrees(l, oldNode, newNode), combineTrees(r, oldNode, newNode), op)
-        case Leaf(x) => p1
+        case Leaf(x) => t
         //println("Leaf")
       }
     }
@@ -123,9 +123,9 @@ object Tree {
     println("c1 = " + evaluateFunction(crossover(t, t2)))
     println("c2 = " + evaluateFunction(crossover(t2, t)))
 
-    val tree1 = Node(Node(Leaf(1), Leaf(2), add), Node(Leaf(3), Leaf(4), sub), multiply)
-    println (printFunction(tree1))
-    println(evaluateFunction(tree1))
+    //val tree1 = Node(Node(Leaf(1), Leaf(2), add), Node(Leaf(3), Leaf(4), sub), multiply)
+    //println (printFunction(tree1))
+    //println(evaluateFunction(tree1))
   }
 
 
