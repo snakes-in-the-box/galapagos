@@ -19,6 +19,10 @@ object Tree {
 
   }
 
+  def tree(x: Double): Tree = {
+    Leaf(x)
+  }
+
   val add = (a : Double, b : Double) => a + b
 
   val sub = (a : Double, b : Double) => a - b
@@ -57,10 +61,6 @@ object Tree {
 
   def randomInitialized(max: Int) : Tree = {
     ranInit(0, ran.nextInt() % max)
-  }
-
-  def tree(x: Double): Tree = {
-    Leaf(x)
   }
 
   def printFunction(t: Tree): String = t match {
