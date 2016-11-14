@@ -1,7 +1,3 @@
-/**
-  * Created by Brent on 11/14/2016.
-  */
-import java.util.function.DoubleBinaryOperator
 
 import scala.util.Random
 
