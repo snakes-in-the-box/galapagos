@@ -34,7 +34,7 @@ object Tree {
     else if (op == sub) "-"
     else if (op == multiply) "*"
     else if (op == divide) "/"
-    else if (op == pow) "^"
+    //else if (op == pow) "^"
     else "NULL"
   }
 
@@ -43,7 +43,7 @@ object Tree {
     if (p < .2) add
     else if (p < .4) sub
     else if (p < .6) multiply
-    else if (p < .8) divide
+    else if (p <= 1) divide
     else pow
   }
 
