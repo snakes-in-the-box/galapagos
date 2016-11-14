@@ -51,11 +51,11 @@ object Tree {
       val op = randomOp()
       tree(ranInit(depth+1, max), ranInit(depth+1, max), op)
     }
-    else tree(7)//tree(ran.nextGaussian()*ran.nextInt())
+    else tree(ran.nextGaussian()*ran.nextInt())
   }
 
   def randomInitialized() : Tree = {
-    ranInit(0, 5)//ran.nextInt() % 100)
+    ranInit(0, ran.nextInt() % 5)
   }
 
   def tree(x: Double): Tree = {
