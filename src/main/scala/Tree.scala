@@ -55,8 +55,8 @@ object Tree {
     else tree(ran.nextGaussian()*ran.nextInt())
   }
 
-  def randomInitialized() : Tree = {
-    ranInit(0, ran.nextInt() % 5)
+  def randomInitialized(max: Int) : Tree = {
+    ranInit(0, ran.nextInt() % max)
   }
 
   def tree(x: Double): Tree = {
@@ -111,8 +111,8 @@ object Tree {
   }
 
   def main(args: Array[String]) {
-    val t = randomInitialized()
-    val t2 = randomInitialized()
+    val t = randomInitialized(5)
+    val t2 = randomInitialized(5)
     println("t = " + printFunction(t))
     println("t2 = " + printFunction(t2))
     println("c1 = " + printFunction(crossover(t, t2)))
