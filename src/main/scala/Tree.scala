@@ -40,9 +40,9 @@ object Tree {
 
   def randomOp() : (Double, Double) => Double = {
     val p = ran.nextDouble()
-    if (p < .2) add
-    else if (p < .4) sub
-    else if (p < .6) multiply
+    if (p < .25) add
+    else if (p < .5) sub
+    else if (p < .75) multiply
     else if (p <= 1) divide
     else pow
   }
