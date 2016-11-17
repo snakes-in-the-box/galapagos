@@ -88,16 +88,16 @@ object Tree {
     case Leaf(x, f) => x * dataValue(f, inst)
   }
 
-  def sumAverages(t: Tree, indvs: List[List[Double]]) : Double = {
-    if (indvs != Nil) {
-      findInstanceFitness(t, indvs(0)) + sumAverages(t, indvs)
+  def sumAverages(t: Tree, insts: List[List[Double]]) : Double = {
+    if (insts != Nil) {
+      findInstanceFitness(t, insts(0)) + sumAverages(t, insts)
     }//if
     else 0
   }
 
-  def findAverageFitness(t: Tree, indvs: List[List[Double]]): Double = {
-    val sum = sumAverages(t, indvs)
-    sum / indvs.size:Double
+  def findAverageFitness(t: Tree, insts: List[List[Double]]): Double = {
+    val sum = sumAverages(t, insts)
+    sum / insts.size:Double
   }
 
   def randomNode(t : Tree) : Tree = {
