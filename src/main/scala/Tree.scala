@@ -77,9 +77,21 @@ object Tree {
     case Leaf(x, f) => x.toString + ":" + f.toString
   }
 
+  /*
   def evaluateFunction(t: Tree): Double = t match {
     case Node(l, r, op) => op (evaluateFunction(l), evaluateFunction(r))
     case Leaf(x, f) => x
+  }*/
+
+  def dataValue(feature: String) : Double = {
+    //Will return the value of some feature column of some specified instance
+    // (the way to specify the instance has not be decided yet)
+    0
+  }
+
+  def findFitness(t: Tree): Double = t match {
+    case Node(l, r, op) => op (findFitness(l), findFitness(r))
+    case Leaf(x, f) => x * dataValue(f)
   }
 
   def randomNode(t : Tree) : Tree = {
