@@ -8,7 +8,7 @@ object Tree {
 
   abstract class Tree
   case class Node(left: Tree, right: Tree, op: (Double, Double) => Double) extends Tree
-  case class Leaf(x: Double) extends Tree
+  case class Leaf(x: Double, feature: String) extends Tree
 
   val ran = new Random(System.currentTimeMillis)
 
@@ -19,8 +19,8 @@ object Tree {
 
   }
 
-  def tree(x: Double): Tree = {
-    Leaf(x)
+  def tree(x: Double, feature: String): Tree = {
+    Leaf(x, feature: String)
   }
 
   val add = (a : Double, b : Double) => a + b
@@ -33,7 +33,7 @@ object Tree {
 
   val pow = (a : Double, b : Double) => Math.pow(a,b)
 
-  def opToString(op : (Double, Double) => Double) :String = {
+  def opToString(op : (Double, Double) => Double): String = {
     if (op == add) "+"
     else if (op == sub) "-"
     else if (op == multiply) "*"
@@ -44,11 +44,20 @@ object Tree {
 
   def randomOp() : (Double, Double) => Double = {
     val p = ran.nextDouble()
-    if (p < .25) add
+    if (p < .25) add                                        `
     else if (p < .5) sub
     else if (p < .75) multiply
     else if (p <= 1) divide
     else pow
+  }
+
+  def randomFeature() : String = {
+    val numCols = 2;
+    val p = ran.nextInt() % numCols;
+    p match {
+      case 0 => "avg_temp_soil_10cm_C"
+      case 1 => "avg_temp_air_60cm_C"
+    }
   }
 
   def ranInit(depth : Int, max : Int) : Tree = {
@@ -56,7 +65,7 @@ object Tree {
       val op = randomOp()
       tree(ranInit(depth+1, max), ranInit(depth+1, max), op)
     }
-    else tree(ran.nextGaussian()*ran.nextInt())
+    else tree(ran.nextGaussian()*ran.nextInt(), randomFeature())
   }
 
   def randomInitialized(max: Int) : Tree = {
@@ -65,12 +74,12 @@ object Tree {
 
   def printFunction(t: Tree): String = t match {
     case Node(l, r, op) => printFunction(l) + opToString(op) + printFunction(r)
-    case Leaf(x) => x.toString
+    case Leaf(x, f) => x.toString + ":" + f.toString
   }
 
   def evaluateFunction(t: Tree): Double = t match {
     case Node(l, r, op) => op (evaluateFunction(l), evaluateFunction(r))
-    case Leaf(x) => x
+    case Leaf(x, f) => x
   }
 
   def randomNode(t : Tree) : Tree = {
@@ -81,7 +90,7 @@ object Tree {
         else if (p <.66) randomNode(l)
         else randomNode(r)
 
-      case Leaf(x) => t
+      case Leaf(x, f) => t
     }
   }
 
@@ -96,7 +105,7 @@ object Tree {
         case Node(l, r, op) =>
           //println("Node")
           Node(combineTrees(l, oldNode, newNode), combineTrees(r, oldNode, newNode), op)
-        case Leaf(x) => t
+        case Leaf(x, f) => t
         //println("Leaf")
       }
     }
