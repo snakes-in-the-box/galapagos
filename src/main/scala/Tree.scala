@@ -77,21 +77,19 @@ object Tree {
     case Leaf(x, f) => x.toString + ":" + f.toString
   }
 
-  /*
-  def evaluateFunction(t: Tree): Double = t match {
-    case Node(l, r, op) => op (evaluateFunction(l), evaluateFunction(r))
-    case Leaf(x, f) => x
-  }*/
 
-  def dataValue(feature: String) : Double = {
+  def dataValue(feature: String, inst: List[Double]) : Double = {
     //Will return the value of some feature column of some specified instance
-    // (the way to specify the instance has not be decided yet)
-    0
+    1
   }
 
-  def findFitness(t: Tree): Double = t match {
-    case Node(l, r, op) => op (findFitness(l), findFitness(r))
-    case Leaf(x, f) => x * dataValue(f)
+  def findInstanceFitness(t: Tree, inst: List[Double]): Double = t match {
+    case Node(l, r, op) => op (findInstanceFitness(l, inst), findInstanceFitness(r, inst))
+    case Leaf(x, f) => x * dataValue(f, inst)
+  }
+
+  def findAvergeFitness(t: Tree, indvs: List[List[Double]]): Double = {
+
   }
 
   def randomNode(t : Tree) : Tree = {
@@ -139,10 +137,6 @@ object Tree {
     println("c1 = " + printFunction(crossover(t, t2)))
     println("c2 = " + printFunction(crossover(t2, t)))
 
-    println("t = " + evaluateFunction(t))
-    println("t2 = " + evaluateFunction(t2))
-    println("c1 = " + evaluateFunction(crossover(t, t2)))
-    println("c2 = " + evaluateFunction(crossover(t2, t)))
 
     //val tree1 = Node(Node(Leaf(1), Leaf(2), add), Node(Leaf(3), Leaf(4), sub), multiply)
     //println (printFunction(tree1))
