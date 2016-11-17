@@ -1,4 +1,5 @@
 
+import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
 /**
@@ -135,6 +136,32 @@ object GeneticProgram {
     val node2 = randomNode(p2)
     //println("node2 = " + printFunction(node2))
     combineTrees(p1, node1, node2)
+  }
+
+  def randomTrees(pop: List[Tree], size: Int): ListBuffer[Tree] = {
+    val chosen : ListBuffer[Tree] = new ListBuffer[Tree]
+    for (i <- 0 until size) {
+      chosen += pop(ran.nextInt(pop.size))
+    }//for
+    chosen
+  }
+
+  def loveSelection(pop: List[Tree], tourSize: Int, insts: List[List[Double]]) : Tree = {
+      val chosen = randomTrees(pop, tourSize)
+      chosen.foldLeft(chosen(0)) {
+      (t1: Tree, t2: Tree) =>
+        if (findAverageFitness(t1, insts) > findAverageFitness(t2, insts)) t1
+        else t2
+      }
+  }
+
+  def deathSelection(pop: List[Tree], tourSize: Int, insts: List[List[Double]]) : Tree = {
+    val chosen = randomTrees(pop, tourSize)
+    chosen.foldLeft(chosen(0)) {
+      (t1: Tree, t2: Tree) =>
+        if (findAverageFitness(t1, insts) < findAverageFitness(t2, insts)) t1
+        else t2
+    }
   }
 
   def main(args: Array[String]) {
