@@ -44,7 +44,7 @@ object Tree {
 
   def randomOp() : (Double, Double) => Double = {
     val p = ran.nextDouble()
-    if (p < .25) add                                        `
+    if (p < .25) add
     else if (p < .5) sub
     else if (p < .75) multiply
     else if (p <= 1) divide
@@ -52,8 +52,8 @@ object Tree {
   }
 
   def randomFeature() : String = {
-    val numCols = 2;
-    val p = ran.nextInt() % numCols;
+    val numCols = 2
+    val p = ran.nextInt() % numCols
     p match {
       case 0 => "avg_temp_soil_10cm_C"
       case 1 => "avg_temp_air_60cm_C"
