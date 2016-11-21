@@ -17,7 +17,6 @@ object GeneticProgram {
 
   def tree(left: Tree, right: Tree, op: (Double, Double) => Double) : Tree = {
     Node(left, right, op)
-
   }
 
   def tree(x: Double, feature: String): Tree = {
@@ -54,10 +53,11 @@ object GeneticProgram {
 
   def randomFeature(ran: Random) : String = {
     val numCols = 2
-    val p = ran.nextInt() % numCols
+    val p = ran.nextInt(numCols)// % numCols
     p match {
       case 0 => "avg_temp_soil_10cm_C"
       case 1 => "avg_temp_air_60cm_C"
+        //etc
     }
   }
 
@@ -70,7 +70,7 @@ object GeneticProgram {
   }
 
   def randomInitialized(max: Int, ran: Random) : Tree = {
-    ranInit(0, ran.nextInt() % max, ran)
+    ranInit(0, max, ran)
   }
 
   def printFunction(t: Tree): String = t match {
@@ -138,7 +138,7 @@ object GeneticProgram {
     combineTrees(p1, node1, node2)
   }
 
-  def randomTrees(pop: List[Tree], size: Int, ran: Random): ListBuffer[Tree] = {
+  def randomTrees(pop: ListBuffer[Tree], size: Int, ran: Random): ListBuffer[Tree] = {
     val chosen : ListBuffer[Tree] = new ListBuffer[Tree]
     for (i <- 0 until size) {
       chosen += pop(ran.nextInt(pop.size))
@@ -146,7 +146,7 @@ object GeneticProgram {
     chosen
   }
 
-  def loveSelection(pop: List[Tree], tourSize: Int, insts: List[List[Double]], ran: Random) : Tree = {
+  def loveSelection(pop: ListBuffer[Tree], tourSize: Int, insts: List[List[Double]], ran: Random) : Tree = {
       val chosen = randomTrees(pop, tourSize, ran)
       chosen.foldLeft(chosen(0)) {
       (t1: Tree, t2: Tree) =>
@@ -155,7 +155,7 @@ object GeneticProgram {
       }
   }
 
-  def deathSelection(pop: List[Tree], tourSize: Int, insts: List[List[Double]], ran: Random) : Tree = {
+  def deathSelection(pop: ListBuffer[Tree], tourSize: Int, insts: List[List[Double]], ran: Random) : Tree = {
     val chosen = randomTrees(pop, tourSize, ran)
     chosen.foldLeft(chosen(0)) {
       (t1: Tree, t2: Tree) =>
@@ -164,15 +164,26 @@ object GeneticProgram {
     }
   }
 
+  def initializePopulation(size: Int, maxDepth: Int, ran: Random): ListBuffer[Tree] = {
+    if (size > 0) {
+      (new ListBuffer[Tree]() += randomInitialized(ran.nextInt(maxDepth)+1, ran)) ++: initializePopulation(size-1, maxDepth, ran)
+    }
+    else new ListBuffer[Tree]()
+  }
+
   def main(args: Array[String]) {
     val ran = new Random(System.currentTimeMillis)
+    val pop = initializePopulation(5, 5, ran)
+    println(pop.size)
+    println(pop.toString())
+    /*
     val t = randomInitialized(5, ran)
     val t2 = randomInitialized(5, ran)
     println("t = " + printFunction(t))
     println("t2 = " + printFunction(t2))
     println("c1 = " + printFunction(crossover(t, t2, ran)))
     println("c2 = " + printFunction(crossover(t2, t, ran)))
-
+    */
 
     //val tree1 = Node(Node(Leaf(1), Leaf(2), add), Node(Leaf(3), Leaf(4), sub), multiply)
     //println (printFunction(tree1))
