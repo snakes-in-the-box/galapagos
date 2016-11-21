@@ -101,16 +101,16 @@ object GeneticProgram {
     sum / insts.size:Double
   }
 
-  def randomNode(t : Tree, ran: Random) : Tree = {
-    val p = ran.nextDouble()
+  def vectorize(t: Tree): ListBuffer[Tree] = {
     t match {
-      case Node(l, r, op) =>
-        if (p <= .34) t
-        else if (p <.66) randomNode(l, ran)
-        else randomNode(r, ran)
-
-      case Leaf(x, f) => t
+      case Node(l, r, op) => (new ListBuffer[Tree]() += t) ++: vectorize(l) ++: vectorize(r)
+      case Leaf(x, f) => new ListBuffer[Tree]() += t
     }
+  }
+
+  def randomNode(t : Tree, ran: Random) : Tree = {
+    val nodes = vectorize(t)
+    nodes(ran.nextInt(nodes.size))
   }
 
   def combineTrees(t: Tree, oldNode: Tree, newNode: Tree) : Tree = {
