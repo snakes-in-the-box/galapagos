@@ -5,7 +5,7 @@ import scala.util.Random
 /**
   * Created by Brent on 11/14/2016.
   */
-object GeneticProgram {
+object Tree {
 
   abstract class Tree
   case class Node(left: Tree, right: Tree, op: (Double, Double) => Double) extends Tree
