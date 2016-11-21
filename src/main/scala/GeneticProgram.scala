@@ -11,7 +11,7 @@ object GeneticProgram {
   case class Node(left: Tree, right: Tree, op: (Double, Double) => Double) extends Tree
   case class Leaf(x: Double, feature: String) extends Tree
 
-  val ran = new Random(System.currentTimeMillis)
+  //val ran = new Random(System.currentTimeMillis)
 
   //val tree1 = Node(Node(Leaf(1), Leaf(2), "+"), Node(Leaf(3), Leaf(4), "-"), "*")
 
@@ -43,7 +43,7 @@ object GeneticProgram {
     else "NULL"
   }
 
-  def randomOp() : (Double, Double) => Double = {
+  def randomOp(ran: Random) : (Double, Double) => Double = {
     val p = ran.nextDouble()
     if (p < .25) add
     else if (p < .5) sub
@@ -52,7 +52,7 @@ object GeneticProgram {
     else pow
   }
 
-  def randomFeature() : String = {
+  def randomFeature(ran: Random) : String = {
     val numCols = 2
     val p = ran.nextInt() % numCols
     p match {
@@ -61,16 +61,16 @@ object GeneticProgram {
     }
   }
 
-  def ranInit(depth : Int, max : Int) : Tree = {
+  def ranInit(depth : Int, max : Int, ran: Random) : Tree = {
     if (depth < max) {
-      val op = randomOp()
-      tree(ranInit(depth+1, max), ranInit(depth+1, max), op)
+      val op = randomOp(ran)
+      tree(ranInit(depth+1, max, ran), ranInit(depth+1, max, ran), op)
     }
-    else tree(ran.nextGaussian()*ran.nextInt(), randomFeature())
+    else tree(ran.nextGaussian()*ran.nextInt(), randomFeature(ran))
   }
 
-  def randomInitialized(max: Int) : Tree = {
-    ranInit(0, ran.nextInt() % max)
+  def randomInitialized(max: Int, ran: Random) : Tree = {
+    ranInit(0, ran.nextInt() % max, ran)
   }
 
   def printFunction(t: Tree): String = t match {
@@ -101,13 +101,13 @@ object GeneticProgram {
     sum / insts.size:Double
   }
 
-  def randomNode(t : Tree) : Tree = {
+  def randomNode(t : Tree, ran: Random) : Tree = {
     val p = ran.nextDouble()
     t match {
       case Node(l, r, op) =>
         if (p <= .34) t
-        else if (p <.66) randomNode(l)
-        else randomNode(r)
+        else if (p <.66) randomNode(l, ran)
+        else randomNode(r, ran)
 
       case Leaf(x, f) => t
     }
@@ -130,15 +130,15 @@ object GeneticProgram {
     }
   }
 
-  def crossover(p1: Tree, p2: Tree) : Tree = {
-    val node1 = randomNode(p1)
+  def crossover(p1: Tree, p2: Tree, ran: Random) : Tree = {
+    val node1 = randomNode(p1, ran)
     //println("node1 = " + printFunction(node1))
-    val node2 = randomNode(p2)
+    val node2 = randomNode(p2, ran)
     //println("node2 = " + printFunction(node2))
     combineTrees(p1, node1, node2)
   }
 
-  def randomTrees(pop: List[Tree], size: Int): ListBuffer[Tree] = {
+  def randomTrees(pop: List[Tree], size: Int, ran: Random): ListBuffer[Tree] = {
     val chosen : ListBuffer[Tree] = new ListBuffer[Tree]
     for (i <- 0 until size) {
       chosen += pop(ran.nextInt(pop.size))
@@ -146,8 +146,8 @@ object GeneticProgram {
     chosen
   }
 
-  def loveSelection(pop: List[Tree], tourSize: Int, insts: List[List[Double]]) : Tree = {
-      val chosen = randomTrees(pop, tourSize)
+  def loveSelection(pop: List[Tree], tourSize: Int, insts: List[List[Double]], ran: Random) : Tree = {
+      val chosen = randomTrees(pop, tourSize, ran)
       chosen.foldLeft(chosen(0)) {
       (t1: Tree, t2: Tree) =>
         if (findAverageFitness(t1, insts) > findAverageFitness(t2, insts)) t1
@@ -155,8 +155,8 @@ object GeneticProgram {
       }
   }
 
-  def deathSelection(pop: List[Tree], tourSize: Int, insts: List[List[Double]]) : Tree = {
-    val chosen = randomTrees(pop, tourSize)
+  def deathSelection(pop: List[Tree], tourSize: Int, insts: List[List[Double]], ran: Random) : Tree = {
+    val chosen = randomTrees(pop, tourSize, ran)
     chosen.foldLeft(chosen(0)) {
       (t1: Tree, t2: Tree) =>
         if (findAverageFitness(t1, insts) < findAverageFitness(t2, insts)) t1
@@ -165,12 +165,13 @@ object GeneticProgram {
   }
 
   def main(args: Array[String]) {
-    val t = randomInitialized(5)
-    val t2 = randomInitialized(5)
+    val ran = new Random(System.currentTimeMillis)
+    val t = randomInitialized(5, ran)
+    val t2 = randomInitialized(5, ran)
     println("t = " + printFunction(t))
     println("t2 = " + printFunction(t2))
-    println("c1 = " + printFunction(crossover(t, t2)))
-    println("c2 = " + printFunction(crossover(t2, t)))
+    println("c1 = " + printFunction(crossover(t, t2, ran)))
+    println("c2 = " + printFunction(crossover(t2, t, ran)))
 
 
     //val tree1 = Node(Node(Leaf(1), Leaf(2), add), Node(Leaf(3), Leaf(4), sub), multiply)
