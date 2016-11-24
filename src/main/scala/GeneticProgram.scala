@@ -138,13 +138,14 @@ object Tree {
     combineTrees(p1, node1, node2)
   }
 
-  def randomTreesAux(pop: ListBuffer[Tree], size: Int, ran: Random): ListBuffer[Tree] = {
+  /*def randomTreesAux(pop: ListBuffer[Tree], size: Int, ran: Random): ListBuffer[Tree] = {
     if (size > 0) (new ListBuffer[Tree] += pop(ran.nextInt(pop.size))) ++: randomTreesAux(pop, size-1, ran)
     else new ListBuffer[Tree]()
-  }
+  }*/
 
   def randomTrees(pop: ListBuffer[Tree], size: Int, ran: Random): ListBuffer[Tree] = {
-    randomTreesAux(pop, size, ran)
+    if (size > 0) (new ListBuffer[Tree] += pop(ran.nextInt(pop.size))) ++: randomTrees(pop, size-1, ran)
+    else new ListBuffer[Tree]()
   }
 
   def loveSelection(pop: ListBuffer[Tree], tourSize: Int, insts: List[List[Double]], ran: Random) : Tree = {
