@@ -4,6 +4,7 @@
 
 import scala.collection.mutable
 import scala.collection.mutable.HashMap
+import scala.util.Try
 
 object DataPipeline {
 
@@ -13,7 +14,7 @@ object DataPipeline {
     if (i < s.size) {
       (new HashMap[Int, String] += (i -> s(i))) ++: indexColumnsAux(s, i + 1)
     }//if
-    else new mutable.HashMap[Int, String]()
+    else new HashMap[Int, String]()
   }
 
   def indexColumns(s: String): HashMap[Int, String] = {
@@ -21,9 +22,16 @@ object DataPipeline {
     indexColumnsAux(split, 0)
   }
 
-  def mapInstance(s: String, indexes: HashMap[Int, String]): HashMap[String, Double] = {
-    val split = s.split(",")
+  def hashInstanceAux(s: Array[String], i: Int, indexes: HashMap[Int, String]): HashMap[String, Double] = {
+    if (i < s.size && Try(s(i).toDouble).isSuccess) {
+      (new HashMap[String, Double]() += (indexes(i) -> s(i).toDouble)) ++: hashInstanceAux(s, i+1, indexes)
+    }
+    else new HashMap[String, Double]()
+  }
 
+  def hashInstance(s: String, indexes: HashMap[Int, String]): HashMap[String, Double] = {
+    val split = s.split(",")
+    hashInstanceAux(split, 0, indexes)
   }
 
 }
