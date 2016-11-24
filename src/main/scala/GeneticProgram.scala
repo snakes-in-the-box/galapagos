@@ -61,16 +61,16 @@ object Tree {
     }
   }
 
-  def ranInit(depth : Int, max : Int, ran: Random) : Tree = {
+  def randomInitializedAux(depth : Int, max : Int, ran: Random) : Tree = {
     if (depth < max) {
       val op = randomOp(ran)
-      tree(ranInit(depth+1, max, ran), ranInit(depth+1, max, ran), op)
+      tree(randomInitializedAux(depth+1, max, ran), randomInitializedAux(depth+1, max, ran), op)
     }
     else tree(ran.nextGaussian()*ran.nextInt(), randomFeature(ran))
   }
 
   def randomInitialized(max: Int, ran: Random) : Tree = {
-    ranInit(0, max, ran)
+    randomInitializedAux(0, max, ran)
   }
 
   def printFunction(t: Tree): String = t match {
