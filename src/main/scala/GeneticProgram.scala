@@ -152,8 +152,8 @@ object Tree {
   }
 
   def mutateCoefficient(t: Tree, ran: Random): Tree = {
-    val leaf = randomLeaf(t, ran)
-
+    val Leaf (x, feature) = randomLeaf(t, ran)
+    combineTrees(t, Leaf (x, feature), new Leaf(x+ran.nextGaussian(), feature))
   }
 
   def mutate(t: Tree, ran: Random) : Tree = {
