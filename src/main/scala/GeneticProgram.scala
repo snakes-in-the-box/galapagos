@@ -131,12 +131,33 @@ object Tree {
     }
   }
 
-  def crossover(p1: Tree, p2: Tree, ran: Random) : Tree = {
+  def crossover(p1: Tree, p2: Tree, ran: Random): Tree = {
     val node1 = randomNode(p1, ran)
     //println("node1 = " + printFunction(node1))
     val node2 = randomNode(p2, ran)
     //println("node2 = " + printFunction(node2))
     combineTrees(p1, node1, node2)
+  }
+
+  def vectorizeLeaves(t: Tree): ListBuffer[Tree] = {
+    t match {
+      case Node(l, r, op) => new ListBuffer[Tree]() ++: vectorize(l) ++: vectorize(r)
+      case Leaf(x, f) => new ListBuffer[Tree]() += t
+    }
+  }
+
+  def randomLeaf(t: Tree, ran: Random): Tree = {
+    val leaves = vectorizeLeaves(t)
+    leaves(ran.nextInt(leaves.size))
+  }
+
+  def mutateCoefficient(t: Tree, ran: Random): Tree = {
+    val leaf = randomLeaf(t, ran)
+
+  }
+
+  def mutate(t: Tree, ran: Random) : Tree = {
+    mutateCoefficient(t, ran)
   }
 
   /*def randomTreesAux(pop: ListBuffer[Tree], size: Int, ran: Random): ListBuffer[Tree] = {
