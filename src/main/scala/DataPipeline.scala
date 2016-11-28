@@ -27,6 +27,7 @@ object DataPipeline {
     if (i < s.length && Try(s(i).toDouble).isSuccess) {
       (new HashMap[String, Double]() += (indexes(i) -> s(i).toDouble)) ++: hashInstanceAux(s, i+1, indexes)
     }
+    else if (i < s.length) hashInstanceAux(s, i+1, indexes)
     else new HashMap[String, Double]()
   }
 
@@ -49,7 +50,8 @@ object DataPipeline {
   }
 
   def main(args: Array[String]): Unit = {
-    println(readFile("2012_hourly/2012-1.csv").toString())
+    val data = readFile("2012_hourly/2012-1.csv")
+    for (inst <- data) println(inst.toString())
   }
 
 }
