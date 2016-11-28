@@ -37,7 +37,7 @@ object DataPipeline {
 
   def readFile(fName: String): List[HashMap[String, Double]] = {
     val src = Source.fromFile(dirPath + fName)
-    val header = src.getLines().toList(0)
+    val header = src.getLines().toList.head
     val indexes = indexColumns(header)
     val instances = src.getLines().toList.drop(1)
     instances.map( s => hashInstance(s, indexes) )
