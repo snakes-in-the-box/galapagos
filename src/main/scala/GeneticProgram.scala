@@ -1,6 +1,7 @@
 
 import scala.collection.mutable.ListBuffer
 import scala.util.Random
+import DataPipeline._
 
 /**
   * Created by Brent on 11/14/2016.
@@ -176,8 +177,10 @@ object Tree {
   def main(args: Array[String]) {
     val ran = new Random(System.currentTimeMillis)
     val pop = initializePopulation(5, 5, ran)
-    println(pop.size)
-    println(pop.toString())
+    //println(pop.size)
+    //println(pop.toString())
+    val data = DataPipeline.readFile("2012_hourly/2012-1.csv")
+    //println(data.size)
     /*
     val t = randomInitialized(5, ran)
     val t2 = randomInitialized(5, ran)
