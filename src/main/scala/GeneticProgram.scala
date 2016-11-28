@@ -67,7 +67,7 @@ object Tree {
       val op = randomOp(ran)
       tree(randomInitializedAux(depth+1, max, ran), randomInitializedAux(depth+1, max, ran), op)
     }
-    else tree(ran.nextGaussian()*ran.nextInt(), randomFeature(ran))
+    else tree(ran.nextGaussian(), randomFeature(ran))
   }
 
   def randomInitialized(max: Int, ran: Random) : Tree = {
