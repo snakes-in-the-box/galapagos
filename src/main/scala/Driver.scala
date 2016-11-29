@@ -64,7 +64,7 @@ object Driver{
   def main(args:Array[String]):Unit={
 
     val data = importData(2016, 2016).filter( inst => !inst.isEmpty )
-    val dataRDD = sc.parallelize(data.drop(data.size%4).sliding(data.size/4).toSeq)
+
     val result = run(populationSize, maxDepth, data, tournamentSize, maxGenerations, ran)
     println(Tree.toString(result))
     println(findAverageFitness(result, data))
