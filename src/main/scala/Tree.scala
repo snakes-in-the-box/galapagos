@@ -17,7 +17,7 @@ object Tree {
   }
 
   def tree(x: Double, feature: String): Tree = {
-    Leaf(x, feature: String)
+    Leaf(x, feature)
   }
 
   val add = (a : Double, b : Double) => a + b
@@ -63,9 +63,9 @@ object Tree {
     randomInitializedAux(0, max, ran)
   }
 
-  def printFunction(t: Tree): String = t match {
-    case Node(l, r, op) => "(" + printFunction(l) + opToString(op) + printFunction(r) + ")"
-    case Leaf(x, f) => x.toString + " : " + f.toString
+  def toString(t: Tree): String = t match {
+    case Node(l, r, op) => "(" ++ toString(l) ++ " " ++ opToString(op) ++ " " ++ toString(r) ++ ")"
+    case Leaf(x, f) => x.toString ++ ":" ++ f
   }
 
   def calculateWetBulb(t: Tree, inst: HashMap[String, Double]): Double = t match {

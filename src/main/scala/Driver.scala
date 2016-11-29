@@ -56,7 +56,7 @@ object Driver{
 
     val data = importData(2016, 2016).filter( inst => !inst.isEmpty )
     val result = run(populationSize, maxDepth, data, tournamentSize, maxGenerations, ran)
-    println(result)
+    println(Tree.toString(result))
     println(findAverageFitness(result, data))
   }
 }
