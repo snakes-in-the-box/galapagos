@@ -167,6 +167,12 @@ object Tree {
     }
   }
 
+  def intercourse(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], ran: Random): Tree = {
+    val t1 = loveSelection(pop, tourSize, insts, ran)
+    val t2 = loveSelection(pop, tourSize, insts, ran)
+    crossover(t1, t2, ran)
+  }
+
   def initializePopulation(size: Int, maxDepth: Int, ran: Random): ListBuffer[Tree] = {
     if (size > 0) {
       (new ListBuffer[Tree]() += randomInitialized(ran.nextInt(maxDepth)+1, ran)) ++: initializePopulation(size-1, maxDepth, ran)
