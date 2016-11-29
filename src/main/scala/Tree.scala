@@ -79,7 +79,7 @@ object Tree {
 
   def sumAverages(t: Tree, insts: List[HashMap[String, Double]]) : Double = {
     if (insts != Nil) {
-      findInstanceFitness(t, insts.head) + sumAverages(t, insts)
+      findInstanceFitness(t, insts.head) + sumAverages(t, insts.drop(1))
     }//if
     else 0
   }
