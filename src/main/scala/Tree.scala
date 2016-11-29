@@ -86,6 +86,7 @@ object Tree {
 
   def findAverageFitness(t: Tree, insts: List[HashMap[String, Double]]): Double = {
     val sum = sumAverages(t, insts)
+    println(sum)
     sum / insts.size:Double
   }
 
@@ -150,7 +151,9 @@ object Tree {
       val chosen = randomTrees(pop, tourSize, ran)
       chosen.foldLeft(chosen.head) {
       (t1: Tree, t2: Tree) =>
-        if (findAverageFitness(t1, insts) < findAverageFitness(t2, insts)) t1
+        val f1 = findAverageFitness(t1, insts)
+        val f2 = findAverageFitness(t2, insts)
+        if (f1 < f2 || f2 == Double.NaN) t1
         else t2
       }
   }
@@ -159,7 +162,9 @@ object Tree {
     val chosen = randomTrees(pop, tourSize, ran)
     chosen.foldLeft(chosen.head) {
       (t1: Tree, t2: Tree) =>
-        if (findAverageFitness(t1, insts) > findAverageFitness(t2, insts)) t1
+        val f1 = findAverageFitness(t1, insts)
+        val f2 = findAverageFitness(t2, insts)
+        if (f1 > f2 || f1 == Double.NaN) t1
         else t2
     }
   }
