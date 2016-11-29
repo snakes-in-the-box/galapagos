@@ -64,8 +64,8 @@ object Tree {
   }
 
   def printFunction(t: Tree): String = t match {
-    case Node(l, r, op) => printFunction(l) + opToString(op) + printFunction(r)
-    case Leaf(x, f) => x.toString + ":" + f.toString
+    case Node(l, r, op) => "(" + printFunction(l) + opToString(op) + printFunction(r) + ")"
+    case Leaf(x, f) => x.toString + " : " + f.toString
   }
 
   def calculateWetBulb(t: Tree, inst: HashMap[String, Double]): Double = t match {
