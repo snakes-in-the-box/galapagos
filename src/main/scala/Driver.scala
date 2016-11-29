@@ -53,7 +53,7 @@ object Driver{
 
   def main(args:Array[String]):Unit={
 
-    val data = importData(2000, 2016)
+    val data = importData(2016, 2016).filter( inst => !inst.isEmpty )
     printFunction(run(populationSize, maxDepth, data, tournamentSize, maxGenerations, ran))
 
   }
