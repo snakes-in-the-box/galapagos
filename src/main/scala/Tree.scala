@@ -46,8 +46,7 @@ object Tree {
     if (p < .25) add
     else if (p < .5) sub
     else if (p < .75) multiply
-    else if (p <= 1) divide
-    else pow
+    else divide
   }
 
   def randomFeature(ran: Random) : String = {
@@ -195,9 +194,14 @@ object Tree {
     else baby
   }
   
-  def eugenics(pop: ListBuffer[Tree], tourSize: Int, newTree: Tree, insts: List[HashMap[String, Double]], ran: Random): ListBuffer[Tree] = {
+  def eugenics(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], newTree: Tree, ran: Random): ListBuffer[Tree] = {
     val weak = deathSelection(pop, tourSize, insts, ran)
     replaceIndividual(pop, weak, newTree)
+  }
+
+  def nextGeneration(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], ran: Random): ListBuffer[Tree] = {
+    val newTree = birthIndividual(pop, tourSize, insts, ran)
+    eugenics(pop, tourSize, insts, newTree, ran)
   }
 
   def main(args: Array[String]) {
