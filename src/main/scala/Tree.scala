@@ -86,7 +86,6 @@ object Tree {
 
   def findAverageFitness(t: Tree, insts: List[HashMap[String, Double]]): Double = {
     val sum = sumAverages(t, insts)
-    println(sum)
     sum / insts.size:Double
   }
 
