@@ -2,7 +2,6 @@ import scala.collection.mutable.{HashMap, ListBuffer}
 import DataPipeline._
 import Tree._
 
-import scala.collection.mutable
 import scala.util.Random
 
 object Driver{
