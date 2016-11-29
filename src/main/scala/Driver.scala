@@ -40,7 +40,9 @@ object Driver{
   def findBest(pop: ListBuffer[Tree], data: List[HashMap[String, Double]]): Tree = {
     pop.foldLeft(pop.head) {
       (t1: Tree, t2: Tree) =>
-        if (findAverageFitness(t1, data) < findAverageFitness(t2, data)) t1
+        val f1 = findAverageFitness(t1, data)
+        val f2 = findAverageFitness(t2, data)
+        if ((f1 < f2 && f1 != Double.NaN) || f2 == Double.NaN) t1
         else t2
     }
   }
