@@ -179,6 +179,13 @@ object Tree {
     else new ListBuffer[Tree]()
   }
 
+  def replaceIndividual(pop: ListBuffer[Tree], oldTree: Tree, newTree: Tree): ListBuffer[Tree] = {
+    pop.map({ t =>
+      if (t == oldTree) newTree
+      else t
+    })
+  }
+
   def main(args: Array[String]) {
     val ran = new Random(System.currentTimeMillis)
     val pop = initializePopulation(5, 5, ran)
