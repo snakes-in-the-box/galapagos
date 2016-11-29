@@ -76,9 +76,13 @@ object Tree {
     inst(feature)
   }
 
-  def findInstanceFitness(t: Tree, inst: HashMap[String, Double]): Double = t match {
-    case Node(l, r, op) => op (findInstanceFitness(l, inst), findInstanceFitness(r, inst))
+  def calculateWetBulb(t: Tree, inst: HashMap[String, Double]): Double = t match {
+    case Node(l, r, op) => op (calculateWetBulb(l, inst), calculateWetBulb(r, inst))
     case Leaf(x, f) => x * dataValue(f, inst)
+  }
+
+  def findInstanceFitness(t: Tree, inst: HashMap[String, Double]): Double = {
+    Math.abs(inst("wet-bulb") - calculateWetBulb(t, inst))
   }
 
   def sumAverages(t: Tree, insts: List[HashMap[String, Double]]) : Double = {
