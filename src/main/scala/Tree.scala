@@ -3,6 +3,8 @@ import scala.collection.mutable.{HashMap, ListBuffer}
 import scala.util.Random
 import DataPipeline._
 
+import scala.collection.mutable
+
 /**
   * Created by Brent on 11/14/2016.
   */
@@ -185,6 +187,12 @@ object Tree {
       if (t == oldTree) newTree
       else t
     })
+  }
+
+  def birthIndividual(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], ran: Random): Tree = {
+    val baby = intercourse(pop, tourSize, insts, ran)
+    if (ran.nextDouble() <= .05) mutate(baby, ran)
+    else baby
   }
 
   def main(args: Array[String]) {
