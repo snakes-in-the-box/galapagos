@@ -2,7 +2,6 @@
   * Created by Brent on 11/23/2016.
   */
 
-//import scala.collection.mutable
 import scala.collection.mutable.HashMap
 import scala.io.Source
 import scala.util.Try
@@ -32,26 +31,16 @@ object DataPipeline {
   }
 
   def hashInstance(s: String, indexes: HashMap[Int, String]): HashMap[String, Double] = {
-    //println("hash!")
     val split = s.split(",")
-    //for (s <- split) println(s)
     hashInstanceAux(split, 0, indexes)
   }
 
   def readFile(fName: String): List[HashMap[String, Double]] = {
-    //println("read!")
     val src = Source.fromFile(dirPath + fName)
     val fileList = src.getLines().toList
     val indexes = indexColumns(fileList.head)
-    //println(indexes.toString())
     val instances = fileList.drop(1)
     instances.map( s => hashInstance(s, indexes))
-    //for (s <- instances) println(hashInstance(s, indexes).toString())
-  }
-
-  def main(args: Array[String]): Unit = {
-    val data = readFile("2012_hourly/2012-1.csv")
-    for (inst <- data) println(inst.toString())
   }
 
 }

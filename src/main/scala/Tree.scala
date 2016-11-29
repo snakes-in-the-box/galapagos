@@ -204,13 +204,5 @@ object Tree {
     eugenics(pop, tourSize, insts, newTree, ran)
   }
 
-  def main(args: Array[String]) {
-    val ran = new Random(System.currentTimeMillis)
-    val pop = initializePopulation(5, 5, ran)
-    val data = DataPipeline.readFile("2012_hourly/2012-1.csv")
-
-  }
-
-
 }
 
