@@ -158,7 +158,7 @@ object Tree {
       val chosen = randomTrees(pop, tourSize, ran)
       chosen.foldLeft(chosen.head) {
       (t1: Tree, t2: Tree) =>
-        if (findAverageFitness(t1, insts) > findAverageFitness(t2, insts)) t1
+        if (findAverageFitness(t1, insts) < findAverageFitness(t2, insts)) t1
         else t2
       }
   }
@@ -167,7 +167,7 @@ object Tree {
     val chosen = randomTrees(pop, tourSize, ran)
     chosen.foldLeft(chosen.head) {
       (t1: Tree, t2: Tree) =>
-        if (findAverageFitness(t1, insts) < findAverageFitness(t2, insts)) t1
+        if (findAverageFitness(t1, insts) > findAverageFitness(t2, insts)) t1
         else t2
     }
   }
