@@ -68,14 +68,9 @@ object Tree {
     case Leaf(x, f) => x.toString + ":" + f.toString
   }
 
-
-  def dataValue(feature: String, inst: HashMap[String, Double]) : Double = {
-    inst(feature)
-  }
-
   def calculateWetBulb(t: Tree, inst: HashMap[String, Double]): Double = t match {
     case Node(l, r, op) => op (calculateWetBulb(l, inst), calculateWetBulb(r, inst))
-    case Leaf(x, f) => x * dataValue(f, inst)
+    case Leaf(x, f) => x * inst(f)
   }
 
   def findInstanceFitness(t: Tree, inst: HashMap[String, Double]): Double = {
