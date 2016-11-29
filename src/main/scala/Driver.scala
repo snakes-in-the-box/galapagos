@@ -5,7 +5,15 @@ import Tree._
 import scala.collection.mutable
 import scala.util.Random
 
+import org.apache.spark._
+import org.apache.spark.rdd.RDD
+import com.typesafe.config.ConfigFactory
+import org.apache.hadoop.mapred._
+
 object Driver{
+
+  val sparkConf = new SparkConf().setAppName("BlkFish")
+  val sc = new SparkContext(sparkConf)
 
   val dirPath = "C:/Users/Brent/Documents/School/DataPrac/FinalData/15_min/"
 
