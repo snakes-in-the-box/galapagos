@@ -1,9 +1,7 @@
 
 import scala.collection.mutable.{HashMap, ListBuffer}
 import scala.util.Random
-import DataPipeline._
 
-import scala.collection.mutable
 
 /**
   * Created by Brent on 11/14/2016.
@@ -37,7 +35,6 @@ object Tree {
     else if (op == sub) "-"
     else if (op == multiply) "*"
     else if (op == divide) "/"
-    //else if (op == pow) "^"
     else "NULL"
   }
 
