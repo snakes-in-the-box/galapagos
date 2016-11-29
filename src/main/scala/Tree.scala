@@ -194,6 +194,11 @@ object Tree {
     if (ran.nextDouble() <= .05) mutate(baby, ran)
     else baby
   }
+  
+  def eugenics(pop: ListBuffer[Tree], tourSize: Int, newTree: Tree, insts: List[HashMap[String, Double]], ran: Random): ListBuffer[Tree] = {
+    val weak = deathSelection(pop, tourSize, insts, ran)
+    replaceIndividual(pop, weak, newTree)
+  }
 
   def main(args: Array[String]) {
     val ran = new Random(System.currentTimeMillis)
