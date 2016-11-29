@@ -77,8 +77,7 @@ object Tree {
 
 
   def dataValue(feature: String, inst: HashMap[String, Double]) : Double = {
-    //Will return the value of some feature column of some specified instance
-    1
+    inst(feature)
   }
 
   def findInstanceFitness(t: Tree, inst: HashMap[String, Double]): Double = t match {
@@ -111,9 +110,7 @@ object Tree {
   }
 
   def combineTrees(t: Tree, oldNode: Tree, newNode: Tree) : Tree = {
-    //println("combTrees: t = " + printFunction(t) + "\told = " + printFunction(oldNode) + "\tnew = " + printFunction(newNode))
     if (t == oldNode) {
-      //println("if")
       newNode
     }
     else {
