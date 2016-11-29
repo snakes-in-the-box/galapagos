@@ -10,8 +10,6 @@ import scala.util.Try
 
 object DataPipeline {
 
-  val dirPath = "C:/Users/Brent/Documents/School/DataPrac/FinalData/"
-
   def indexColumnsAux(s: Array[String], i: Int): HashMap[Int, String] = {
     if (i < s.length) {
       (new HashMap[Int, String] += (i -> s(i))) ++: indexColumnsAux(s, i + 1)
@@ -45,8 +43,8 @@ object DataPipeline {
     inst += ("wet-bulb" -> calculateWetBulb(inst("avg_temp_air_2m_C"), inst("avg_rh_2m_pct")))
   }
 
-  def readFile(fName: String): List[HashMap[String, Double]] = {
-    val src = Source.fromFile(dirPath + fName)
+  def readFile(filePath: String): List[HashMap[String, Double]] = {
+    val src = Source.fromFile(filePath)
     val fileList = src.getLines().toList
     val indexes = indexColumns(fileList.head)
     val instances = fileList.drop(1)
