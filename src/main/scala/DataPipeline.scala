@@ -4,6 +4,7 @@
 
 import breeze.numerics.{atan, pow}
 
+import scala.collection.mutable
 import scala.collection.mutable.HashMap
 import scala.io.Source
 import scala.util.Try
@@ -40,7 +41,9 @@ object DataPipeline {
   }
 
   def addGroundTruth(inst: HashMap[String, Double]): HashMap[String, Double] = {
-    inst += ("wet-bulb" -> calculateWetBulb(inst("temp_air_2m_C"), inst("rh_2m_pct")))
+    if (inst.contains("temp_air_2m_C") && inst.contains("rh_2m_pct"))
+      inst += ("wet-bulb" -> calculateWetBulb(inst("temp_air_2m_C"), inst("rh_2m_pct")))
+    else new mutable.HashMap[String, Double]()
   }
 
   def readFile(filePath: String): List[HashMap[String, Double]] = {
