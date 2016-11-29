@@ -12,10 +12,6 @@ object Tree {
   case class Node(left: Tree, right: Tree, op: (Double, Double) => Double) extends Tree
   case class Leaf(x: Double, feature: String) extends Tree
 
-  //val ran = new Random(System.currentTimeMillis)
-
-  //val tree1 = Node(Node(Leaf(1), Leaf(2), "+"), Node(Leaf(3), Leaf(4), "-"), "*")
-
   def tree(left: Tree, right: Tree, op: (Double, Double) => Double) : Tree = {
     Node(left, right, op)
   }
@@ -123,19 +119,15 @@ object Tree {
     else {
       t match {
         case Node(l, r, op) =>
-          //println("Node")
           Node(combineTrees(l, oldNode, newNode), combineTrees(r, oldNode, newNode), op)
         case Leaf(x, f) => t
-        //println("Leaf")
       }
     }
   }
 
   def crossover(p1: Tree, p2: Tree, ran: Random): Tree = {
     val node1 = randomNode(p1, ran)
-    //println("node1 = " + printFunction(node1))
     val node2 = randomNode(p2, ran)
-    //println("node2 = " + printFunction(node2))
     combineTrees(p1, node1, node2)
   }
 
@@ -159,11 +151,6 @@ object Tree {
   def mutate(t: Tree, ran: Random) : Tree = {
     mutateCoefficient(t, ran)
   }
-
-  /*def randomTreesAux(pop: ListBuffer[Tree], size: Int, ran: Random): ListBuffer[Tree] = {
-    if (size > 0) (new ListBuffer[Tree] += pop(ran.nextInt(pop.size))) ++: randomTreesAux(pop, size-1, ran)
-    else new ListBuffer[Tree]()
-  }*/
 
   def randomTrees(pop: ListBuffer[Tree], size: Int, ran: Random): ListBuffer[Tree] = {
     if (size > 0) (new ListBuffer[Tree] += pop(ran.nextInt(pop.size))) ++: randomTrees(pop, size-1, ran)
@@ -198,22 +185,8 @@ object Tree {
   def main(args: Array[String]) {
     val ran = new Random(System.currentTimeMillis)
     val pop = initializePopulation(5, 5, ran)
-    //println(pop.size)
-    //println(pop.toString())
     val data = DataPipeline.readFile("2012_hourly/2012-1.csv")
-    //println(data.size)
-    /*
-    val t = randomInitialized(5, ran)
-    val t2 = randomInitialized(5, ran)
-    println("t = " + printFunction(t))
-    println("t2 = " + printFunction(t2))
-    println("c1 = " + printFunction(crossover(t, t2, ran)))
-    println("c2 = " + printFunction(crossover(t2, t, ran)))
-    */
 
-    //val tree1 = Node(Node(Leaf(1), Leaf(2), add), Node(Leaf(3), Leaf(4), sub), multiply)
-    //println (printFunction(tree1))
-    //println(evaluateFunction(tree1))
   }
 
 
