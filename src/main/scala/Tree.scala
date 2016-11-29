@@ -153,7 +153,7 @@ object Tree {
 
   def mutateCoefficient(t: Tree, ran: Random): Tree = {
     val Leaf (x, feature) = randomLeaf(t, ran)
-    combineTrees(t, Leaf (x, feature), new Leaf(x+ran.nextGaussian(), feature))
+    combineTrees(t, Leaf (x, feature), Leaf(x + ran.nextGaussian(), feature))
   }
 
   def mutate(t: Tree, ran: Random) : Tree = {
@@ -172,7 +172,7 @@ object Tree {
 
   def loveSelection(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], ran: Random) : Tree = {
       val chosen = randomTrees(pop, tourSize, ran)
-      chosen.foldLeft(chosen(0)) {
+      chosen.foldLeft(chosen.head) {
       (t1: Tree, t2: Tree) =>
         if (findAverageFitness(t1, insts) > findAverageFitness(t2, insts)) t1
         else t2
@@ -181,7 +181,7 @@ object Tree {
 
   def deathSelection(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], ran: Random) : Tree = {
     val chosen = randomTrees(pop, tourSize, ran)
-    chosen.foldLeft(chosen(0)) {
+    chosen.foldLeft(chosen.head) {
       (t1: Tree, t2: Tree) =>
         if (findAverageFitness(t1, insts) < findAverageFitness(t2, insts)) t1
         else t2
