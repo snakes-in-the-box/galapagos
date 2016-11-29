@@ -49,13 +49,8 @@ object Tree {
   }
 
   def randomFeature(ran: Random) : String = {
-    val numCols = 2
-    val p = ran.nextInt(numCols)// % numCols
-    p match {
-      case 0 => "avg_temp_soil_10cm_C"
-      case 1 => "avg_temp_air_60cm_C"
-        //etc
-    }
+    val features = List("avg_temp_soil_10cm_C","min_temp_soil_10cm_C","max_temp_soil_10cm_C","avg_temp_air_60cm_C","min_temp_air_60cm_C","max_temp_air_60cm_C","avg_temp_air_2m_C","min_temp_air_2m_C","max_temp_air_2m_C","avg_temp_air_10m_C","min_temp_air_10m_C","max_temp_air_10m_C","avg_rh_2m_pct","avg_temp_dp_2m_C","min_temp_dp_2m_C","max_temp_dp_2m_C","sum_rain_2m_inches","avg_wind_speed_10m_mph","wind_speed_max_10m_mph","wind_direction_10m_deg","avg_rfd_2m_wm2","trf_2m_MJm2")
+    features(ran.nextInt(features.length))
   }
 
   def randomInitializedAux(depth : Int, max : Int, ran: Random) : Tree = {
