@@ -40,7 +40,7 @@ object DataPipeline {
   }
 
   def addGroundTruth(inst: HashMap[String, Double]): HashMap[String, Double] = {
-    inst += ("wet-bulb" -> calculateWetBulb(inst("avg_temp_air_2m_C"), inst("avg_rh_2m_pct")))
+    inst += ("wet-bulb" -> calculateWetBulb(inst("temp_air_2m_C"), inst("rh_2m_pct")))
   }
 
   def readFile(filePath: String): List[HashMap[String, Double]] = {
