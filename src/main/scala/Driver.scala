@@ -4,14 +4,7 @@ import Tree._
 
 import scala.util.Random
 
-import org.apache.spark._
-import org.apache.spark.rdd.RDD
-import org.apache.hadoop.mapred._
-
 object Driver{
-
-  val sparkConf = new SparkConf().setAppName("BlkFish")
-  val sc = new SparkContext(sparkConf)
 
   val dirPath = "C:/Users/Brent/Documents/School/DataPrac/FinalData/15_min/"
 
@@ -55,22 +48,15 @@ object Driver{
     else findBest(pop, data)
   }
 
-  def run(pop: ListBuffer[Tree], maxDepth: Int, data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, ran: Random): Tree = {
+  def run(popSize: Int, maxDepth: Int, data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, ran: Random): Tree = {
+    val pop = initializePopulation(popSize, maxDepth, ran)
     runAux(pop, data, tourSize, maxGen, 0, ran)
   }
 
   def main(args:Array[String]):Unit={
 
     val data = importData(2016, 2016).filter( inst => !inst.isEmpty )
-    val pop = initializePopulation(populationSize, maxDepth, ran)
-    val popRDD = sc.parallelize(pop.sliding(pop.size/4).toSeq)
-    val runRDD = popRDD.map( pop => run(pop, maxDepth, data, tournamentSize, maxGenerations, ran))
-    val result = runRDD.reduce({ (t1, t2) =>
-      val f1 = findAverageFitness(t1, data)
-      val f2 = findAverageFitness(t2, data)
-      if (f1 < f2 && f1 != Double.NaN) t1
-      else t2
-    })
+    val result = run(populationSize, maxDepth, data, tournamentSize, maxGenerations, ran)
     println(Tree.toString(result))
     println(findAverageFitness(result, data))
   }
