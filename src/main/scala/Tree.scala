@@ -1,5 +1,5 @@
 
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{HashMap, ListBuffer}
 import scala.util.Random
 import DataPipeline._
 
@@ -80,24 +80,24 @@ object Tree {
   }
 
 
-  def dataValue(feature: String, inst: List[Double]) : Double = {
+  def dataValue(feature: String, inst: HashMap[String, Double]) : Double = {
     //Will return the value of some feature column of some specified instance
     1
   }
 
-  def findInstanceFitness(t: Tree, inst: List[Double]): Double = t match {
+  def findInstanceFitness(t: Tree, inst: HashMap[String, Double]): Double = t match {
     case Node(l, r, op) => op (findInstanceFitness(l, inst), findInstanceFitness(r, inst))
     case Leaf(x, f) => x * dataValue(f, inst)
   }
 
-  def sumAverages(t: Tree, insts: List[List[Double]]) : Double = {
+  def sumAverages(t: Tree, insts: List[HashMap[String, Double]]) : Double = {
     if (insts != Nil) {
-      findInstanceFitness(t, insts(0)) + sumAverages(t, insts)
+      findInstanceFitness(t, insts.head) + sumAverages(t, insts)
     }//if
     else 0
   }
 
-  def findAverageFitness(t: Tree, insts: List[List[Double]]): Double = {
+  def findAverageFitness(t: Tree, insts: List[HashMap[String, Double]]): Double = {
     val sum = sumAverages(t, insts)
     sum / insts.size:Double
   }
@@ -170,7 +170,7 @@ object Tree {
     else new ListBuffer[Tree]()
   }
 
-  def loveSelection(pop: ListBuffer[Tree], tourSize: Int, insts: List[List[Double]], ran: Random) : Tree = {
+  def loveSelection(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], ran: Random) : Tree = {
       val chosen = randomTrees(pop, tourSize, ran)
       chosen.foldLeft(chosen(0)) {
       (t1: Tree, t2: Tree) =>
@@ -179,7 +179,7 @@ object Tree {
       }
   }
 
-  def deathSelection(pop: ListBuffer[Tree], tourSize: Int, insts: List[List[Double]], ran: Random) : Tree = {
+  def deathSelection(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], ran: Random) : Tree = {
     val chosen = randomTrees(pop, tourSize, ran)
     chosen.foldLeft(chosen(0)) {
       (t1: Tree, t2: Tree) =>
