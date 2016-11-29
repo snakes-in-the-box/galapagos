@@ -24,7 +24,6 @@ object Driver{
   }
 
   def importData(start: Int, end: Int): List[HashMap[String, Double]] = {
-
     if (start <= end) {
       importFile(start) ++: importData(start+1, end)
     }
@@ -54,7 +53,7 @@ object Driver{
 
   def main(args:Array[String]):Unit={
 
-    val data = importData(2000, 2016)
+    val data = importData(2016, 2016)
     printFunction(run(populationSize, maxDepth, data, tournamentSize, maxGenerations, ran))
 
   }
