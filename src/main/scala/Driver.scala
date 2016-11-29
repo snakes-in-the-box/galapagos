@@ -41,7 +41,7 @@ object Driver{
   def runAux(pop: ListBuffer[Tree], data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, curGen: Int, ran: Random): Tree = {
     if (curGen <= maxGen) {
       val nextGen = nextGeneration(pop, tourSize, data, ran)
-      runAux(nextGen, data, tourSize, maxGen, curGen, ran)
+      runAux(nextGen, data, tourSize, maxGen, curGen+1, ran)
     }
     else findBest(pop, data)
   }
