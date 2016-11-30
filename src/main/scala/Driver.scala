@@ -49,17 +49,23 @@ object Driver{
     }
   }
 
-  def runAux(pop: ListBuffer[Tree], data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, curGen: Int, ran: Random): Tree = {
+  def hostageExchange(pop: ListBuffer[Tree], data: List[HashMap[String, Double]], tourSize: Int, ran: Random): Unit = {
+
+  }
+
+  def runAux(pop: ListBuffer[Tree], data: List[HashMap[String, Double]], tourSize: Int,
+             maxGen: Int, curGen: Int, exchangeInterval: Int, ran: Random): Tree = {
     println(curGen)
     if (curGen <= maxGen) {
+      if (curGen % exchangeInterval == 0) hostageExchange(pop, data, tourSize, ran)
       val nextGen = nextGeneration(pop, tourSize, data, ran)
-      runAux(nextGen, data, tourSize, maxGen, curGen+1, ran)
+      runAux(nextGen, data, tourSize, maxGen, exchangeInterval, curGen+1, ran)
     }
     else findBest(pop, data)
   }
 
   def run(pop: ListBuffer[Tree], maxDepth: Int, data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, exchangeInterval: Int, ran: Random): Tree = {
-    runAux(pop, data, tourSize, maxGen, 0, ran)
+    runAux(pop, data, tourSize, maxGen, exchangeInterval, 0, ran)
   }
 
   def main(args:Array[String]):Unit={
