@@ -26,6 +26,8 @@ object Driver{
 
   val maxGenerations = 2
 
+  val exchangeInterval = 2
+
   def importFile(year: Int): List[HashMap[String, Double]] = {
     DataPipeline.readFile(dirPath + year.toString + "-1.csv") ++: DataPipeline.readFile(dirPath + year.toString + "-2.csv")
   }
@@ -56,7 +58,7 @@ object Driver{
     else findBest(pop, data)
   }
 
-  def run(pop: ListBuffer[Tree], maxDepth: Int, data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, ran: Random): Tree = {
+  def run(pop: ListBuffer[Tree], maxDepth: Int, data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, exchangeInterval: Int, ran: Random): Tree = {
     runAux(pop, data, tourSize, maxGen, 0, ran)
   }
 
@@ -65,7 +67,7 @@ object Driver{
     val data = importData(2016, 2016).filter( inst => !inst.isEmpty )
     val pop = initializePopulation(populationSize, maxDepth, ran)
     val popRDD = sc.parallelize(pop.sliding(pop.size/4).toSeq)
-    val runRDD = popRDD.map( pop => run(pop, maxDepth, data, tournamentSize, maxGenerations, ran))
+    val runRDD = popRDD.map( pop => run(pop, maxDepth, data, tournamentSize, maxGenerations, exchangeInterval, ran))
     val result = runRDD.reduce({ (t1, t2) =>
       val f1 = findAverageFitness(t1, data)
       val f2 = findAverageFitness(t2, data)
