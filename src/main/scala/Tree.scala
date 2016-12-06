@@ -75,7 +75,8 @@ object Tree {
   }
 
   def findInstanceFitness(t: Tree, inst: HashMap[String, Double]): Double = {
-    Math.abs(inst("wet-bulb") - calculateWetBulb(t, inst))
+    if (inst.contains("wet-bulb")) Math.abs(inst("wet-bulb") - calculateWetBulb(t, inst))
+    else 0
   }
 
   def sumAverages(t: Tree, insts: List[HashMap[String, Double]]) : Double = {
