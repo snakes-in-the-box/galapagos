@@ -3,6 +3,7 @@ import scala.collection.mutable.{HashMap, ListBuffer}
 import scala.util.Random
 
 
+
 /**
   * Created by Brent on 11/14/2016.
   */
@@ -13,14 +14,6 @@ object Tree {
   case class UnaryNode(child: Tree, op: (Double) => Double) extends Tree
   case class Leaf(x: Double, feature: String) extends Tree
 
-  def tree(left: Tree, right: Tree, op: (Double, Double) => Double) : Tree = {
-    BinaryNode(left, right, op)
-  }
-
-  def tree(x: Double, feature: String): Tree = {
-    Leaf(x, feature)
-  }
-
   val add = (a : Double, b : Double) => a + b
 
   val sub = (a : Double, b : Double) => a - b
@@ -30,6 +23,24 @@ object Tree {
   val divide = (a : Double, b : Double) => a / b
 
   val pow = (a : Double, b : Double) => Math.pow(a,b)
+
+  val sin = (x: Double) => Math.sin(x)
+
+  val cos = (x: Double) => Math.cos(x)
+
+  val tar = (x: Double) => Math.tan(x)
+
+  val arcsin = (x: Double) => Math.asin(x)
+
+  val arccose = (x: Double) => Math.acos(x)
+
+  val arctan = (x: Double) => Math.atan(x)
+
+  val e = (x: Double) => x * Math.E
+
+  val ln = (x: Double) => Math.log1p(x)
+
+  val log = (x: Double) => Math.log(x)
 
   def opToString(op : (Double, Double) => Double): String = {
     if (op == add) "+"
