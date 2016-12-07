@@ -42,7 +42,11 @@ object Driver{
   def runAux(pop: ListBuffer[Tree], data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, curGen: Int, ran: Random): Tree = {
     println(curGen)
     if (curGen <= maxGen) {
-      if (curGen % 10 == 0) println (Tree.toString(findBest(pop, data)))
+      if (curGen % 10 == 0) {
+        val bb = findBest(pop, data)
+        println(Tree.toString(bb))
+        println(Tree.findAverageFitness(bb, data))
+      }//if
       val nextGen = nextGeneration(pop, tourSize, data, ran)
       runAux(nextGen, data, tourSize, maxGen, curGen+1, ran)
     }
