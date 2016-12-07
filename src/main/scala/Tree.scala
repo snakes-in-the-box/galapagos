@@ -153,7 +153,7 @@ object Tree {
       (t1: Tree, t2: Tree) =>
         val f1 = findAverageFitness(t1, insts)
         val f2 = findAverageFitness(t2, insts)
-        if (f1 < f2 || f2 == Double.NaN) t1
+        if (f1 < f2 || f2.isNaN) t1
         else t2
       }
   }
@@ -164,7 +164,7 @@ object Tree {
       (t1: Tree, t2: Tree) =>
         val f1 = findAverageFitness(t1, insts)
         val f2 = findAverageFitness(t2, insts)
-        if (f1 > f2 || f1 == Double.NaN) t1
+        if (f1 > f2 || f1.isNaN) t1
         else t2
     }
   }

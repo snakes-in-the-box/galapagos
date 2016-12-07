@@ -42,7 +42,7 @@ object Driver{
       (t1: Tree, t2: Tree) =>
         val f1 = findAverageFitness(t1, data)
         val f2 = findAverageFitness(t2, data)
-        if ((f1 < f2 && f1 != Double.NaN) || f2 == Double.NaN) t1
+        if ((f1 < f2 && !f1.isNaN) || f2.isNaN) t1
         else t2
     }
   }
@@ -69,7 +69,7 @@ object Driver{
     val result = runRDD.reduce({ (t1, t2) =>
       val f1 = findAverageFitness(t1, data)
       val f2 = findAverageFitness(t2, data)
-      if (f1 < f2 && f1 != Double.NaN) t1
+      if (f1 < f2 && !f1.isNaN) t1
       else t2
     })
     println(Tree.toString(result))
