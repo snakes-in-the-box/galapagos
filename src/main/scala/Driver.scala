@@ -12,11 +12,11 @@ object Driver{
 
   val ran = new Random(System.currentTimeMillis())
 
-  val populationSize = 250
+  val populationSize = 20
 
   val maxDepth = 4
 
-  val maxGenerations = 500
+  val maxGenerations = 50
 
   def importFile(year: Int): List[HashMap[String, Double]] = {
     DataPipeline.readFile(dirPath + year.toString + "-1.csv") ++: DataPipeline.readFile(dirPath + year.toString + "-2.csv")
@@ -42,7 +42,7 @@ object Driver{
   def runAux(pop: ListBuffer[Tree], data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, curGen: Int, ran: Random): Tree = {
     println(curGen)
     if (curGen <= maxGen) {
-      if (curGen % 50 == 0) println (findBest(pop, data))
+      if (curGen % 10 == 0) println (findBest(pop, data))
       val nextGen = nextGeneration(pop, tourSize, data, ran)
       runAux(nextGen, data, tourSize, maxGen, curGen+1, ran)
     }
