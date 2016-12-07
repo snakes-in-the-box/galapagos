@@ -151,15 +151,15 @@ object Tree {
     nodes(ran.nextInt(nodes.size))
   }
 
-  def combineTrees(t: Tree, oldBinaryNode: Tree, newBinaryNode: Tree) : Tree = {
-    if (t == oldBinaryNode) {
-      newBinaryNode
+  def combineTrees(t: Tree, oldNode: Tree, newNode: Tree) : Tree = {
+    if (t == oldNode) {
+      newNode
     }
     else {
       t match {
         case BinaryNode(l, r, op) =>
-          BinaryNode(combineTrees(l, oldBinaryNode, newBinaryNode), combineTrees(r, oldBinaryNode, newBinaryNode), op)
-        case UnaryNode(c, op) => UnaryNode(combineTrees(c, oldBinaryNode, newBinaryNode), op)
+          BinaryNode(combineTrees(l, oldNode, newNode), combineTrees(r, oldNode, newNode), op)
+        case UnaryNode(c, op) => UnaryNode(combineTrees(c, oldNode, newNode), op)
         case Leaf(x, f) => t
       }
     }
