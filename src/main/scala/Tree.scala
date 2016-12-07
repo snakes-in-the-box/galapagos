@@ -70,7 +70,6 @@ object Tree {
     else if (p == 6) e
     else if (p ==6) ln
     else log
-    }
   }
 
   def randomFeature(ran: Random) : String = {
@@ -80,12 +79,11 @@ object Tree {
 
   def randomInitializedAux(depth : Int, max : Int, ran: Random) : Tree = {
     if (depth < max) {
-      if (ran.nextDouble() <= .5) {}
-      val op = binRandomOp(ran)
-      BinaryNode(randomInitializedAux(depth + 1, max, ran), randomInitializedAux(depth + 1, max, ran), op)
-    }//if
-    else
-      UnaryNode(randomInitialized(depth + 1, max, ran), unRandomOp(ran)
+      if (ran.nextDouble() <= .5) {
+        val op = binRandomOp(ran)
+        BinaryNode(randomInitializedAux(depth + 1, max, ran), randomInitializedAux(depth + 1, max, ran), op)
+      }//if
+      else UnaryNode(randomInitializedAux(depth + 1, max, ran), unRandomOp(ran))
     }
     else Leaf(ran.nextGaussian(), randomFeature(ran))
   }
