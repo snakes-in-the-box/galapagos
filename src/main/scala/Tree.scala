@@ -136,7 +136,7 @@ object Tree {
   def mutateCoefficient(t: Tree, ran: Random): Tree = t match {
     case Leaf(x, f) => val l = randomLeaf(t, ran)
                       combineTrees(t, Leaf (x, f), Leaf(x + ran.nextGaussian(), f))
-    case _ => _
+    case default => t
   }
 
   def mutate(t: Tree, ran: Random) : Tree = {
