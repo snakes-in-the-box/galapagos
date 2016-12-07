@@ -33,17 +33,19 @@ object Tree {
 
   val arcsin = (x: Double) => Math.asin(x)
 
-  val arccose = (x: Double) => Math.acos(x)
+  val arccos = (x: Double) => Math.acos(x)
 
   val arctan = (x: Double) => Math.atan(x)
 
   val e = (x: Double) => x * Math.E
 
-  val ln = (x: Double) => Math.log1p(x)
+  val ln = (x: Double) => Math.log(x)
 
-  val log = (x: Double) => Math.log(x)
+  val lg = (x: Double) => Math.log(x) / Math.log(2.0)
 
-  def opToString(op : (Double, Double) => Double): String = {
+  val log = (x: Double) => Math.log10(x)
+
+  def binOpToString(op : (Double, Double) => Double): String = {
     if (op == add) "+"
     else if (op == sub) "-"
     else if (op == multiply) "*"
@@ -59,16 +61,31 @@ object Tree {
     else divide
   }
 
+  def unOpToString(op : (Double) => Double): String = {
+    if (op == sin) "sin"
+    else if (op == cos) "cos"
+    else if (op == tan) "tan"
+    else if (op == arcsin) "arcsin"
+    else if (op == arccos) "arccos"
+    else if (op == arctan) "arctan"
+    else if (op == e) "e"
+    else if (op == ln) "ln"
+    else if (op == lg) "lg"
+    else if (op == log) "log"
+    else "NULL"
+  }
+
   def unRandomOp(ran: Random) : (Double) => Double = {
-    val p = ran.nextInt(5)
+    val p = ran.nextInt(9)
     if (p == 0) sin
     else if (p == 1) cos
     else if (p == 2) tan
     else if (p == 3) arcsin
-    else if (p == 4) arccose
+    else if (p == 4) arccos
     else if (p == 5) arctan
     else if (p == 6) e
     else if (p ==6) ln
+    else if (p == 7) lg
     else log
   }
 
@@ -93,7 +110,8 @@ object Tree {
   }
 
   def toString(t: Tree): String = t match {
-    case BinaryNode(l, r, op) => "(" ++ toString(l) ++ " " ++ opToString(op) ++ " " ++ toString(r) ++ ")"
+    case BinaryNode(l, r, op) => "(" ++ toString(l) ++ " " ++ binOpToString(op) ++ " " ++ toString(r) ++ ")"
+    case UnaryNode(c, op) => "(" ++ unOpToString(op) ++ "( " ++ toString(c) ++ " )" ++ ")"
     case Leaf(x, f) => x.toString ++ ":" ++ f
   }
 
