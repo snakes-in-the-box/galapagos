@@ -123,7 +123,7 @@ object Tree {
 
   def vectorizeLeaves(t: Tree): ListBuffer[Tree] = {
     t match {
-      case Node(l, r, op) => new ListBuffer[Tree]() ++: vectorize(l) ++: vectorize(r)
+      case Node(l, r, op) => (new ListBuffer[Tree]() ++: vectorize(l)) ++: vectorize(r)
       case Leaf(x, f) => new ListBuffer[Tree]() += t
     }
   }
@@ -133,9 +133,10 @@ object Tree {
     leaves(ran.nextInt(leaves.size))
   }
 
-  def mutateCoefficient(t: Tree, ran: Random): Tree = {
-    val Leaf (x, feature) = randomLeaf(t, ran)
-    combineTrees(t, Leaf (x, feature), Leaf(x + ran.nextGaussian(), feature))
+  def mutateCoefficient(t: Tree, ran: Random): Tree = t match {
+    case Leaf(x, f) => val l = randomLeaf(t, ran)
+                      combineTrees(t, Leaf (x, f), Leaf(x + ran.nextGaussian(), f))
+    case _ => _
   }
 
   def mutate(t: Tree, ran: Random) : Tree = {

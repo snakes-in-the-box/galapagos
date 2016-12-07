@@ -8,15 +8,15 @@ object Driver{
 
   val dirPath = "C:/Users/Brent/Documents/School/DataPrac/FinalData/15_min/"
 
-  val tournamentSize = 2
+  val tournamentSize = 10
 
   val ran = new Random(System.currentTimeMillis())
 
-  val populationSize = 5
+  val populationSize = 250
 
-  val maxDepth = 3
+  val maxDepth = 4
 
-  val maxGenerations = 2
+  val maxGenerations = 500
 
   def importFile(year: Int): List[HashMap[String, Double]] = {
     DataPipeline.readFile(dirPath + year.toString + "-1.csv") ++: DataPipeline.readFile(dirPath + year.toString + "-2.csv")
@@ -42,10 +42,13 @@ object Driver{
   def runAux(pop: ListBuffer[Tree], data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, curGen: Int, ran: Random): Tree = {
     println(curGen)
     if (curGen <= maxGen) {
+      if (curGen % 50 == 0) println (findBest(pop, data))
       val nextGen = nextGeneration(pop, tourSize, data, ran)
       runAux(nextGen, data, tourSize, maxGen, curGen+1, ran)
     }
-    else findBest(pop, data)
+    else {
+      findBest(pop, data)
+    }
   }
 
   def run(popSize: Int, maxDepth: Int, data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, ran: Random): Tree = {
