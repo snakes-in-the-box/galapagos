@@ -47,7 +47,7 @@ object Tree {
   }
 
   def randomFeature(ran: Random) : String = {
-    val features = List("temp_soil_10cm_C","temp_air_60cm_C","temp_air_2m_C","temp_air_10m_C","rh_2m_pct","temp_dp_2m_C","rain_2m_inches","wind_speed_10m_mph","wind_speed_max_10m_mph","wind_direction_10m_deg","rfd_2m_wm2")
+    val features = List("temp_soil_10cm_C","temp_air_60cm_C","temp_air_2m_C","temp_air_10m_C","rh_2m_pct","temp_dp_2m_C","rain_2m_inches","wind_speed_10m_mph","wind_direction_10m_deg","rfd_2m_wm2")
     features(ran.nextInt(features.length))
   }
 
