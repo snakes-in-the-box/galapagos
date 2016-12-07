@@ -1,4 +1,5 @@
 
+import scala.collection.mutable
 import scala.collection.mutable.{HashMap, ListBuffer}
 import scala.util.Random
 
@@ -28,7 +29,7 @@ object Tree {
 
   val cos = (x: Double) => Math.cos(x)
 
-  val tar = (x: Double) => Math.tan(x)
+  val tan = (x: Double) => Math.tan(x)
 
   val arcsin = (x: Double) => Math.asin(x)
 
@@ -50,12 +51,26 @@ object Tree {
     else "NULL"
   }
 
-  def randomOp(ran: Random) : (Double, Double) => Double = {
+  def binRandomOp(ran: Random) : (Double, Double) => Double = {
     val p = ran.nextDouble()
     if (p < .25) add
     else if (p < .5) sub
     else if (p < .75) multiply
     else divide
+  }
+
+  def unRandomOp(ran: Random) : (Double) => Double = {
+    val p = ran.nextInt(5)
+    if (p == 0) sin
+    else if (p == 1) cos
+    else if (p == 2) tan
+    else if (p == 3) arcsin
+    else if (p == 4) arccose
+    else if (p == 5) arctan
+    else if (p == 6) e
+    else if (p ==6) ln
+    else log
+    }
   }
 
   def randomFeature(ran: Random) : String = {
@@ -65,10 +80,14 @@ object Tree {
 
   def randomInitializedAux(depth : Int, max : Int, ran: Random) : Tree = {
     if (depth < max) {
-      val op = randomOp(ran)
-      tree(randomInitializedAux(depth+1, max, ran), randomInitializedAux(depth+1, max, ran), op)
+      if (ran.nextDouble() <= .5) {}
+      val op = binRandomOp(ran)
+      BinaryNode(randomInitializedAux(depth + 1, max, ran), randomInitializedAux(depth + 1, max, ran), op)
+    }//if
+    else
+      UnaryNode(randomInitialized(depth + 1, max, ran), unRandomOp(ran)
     }
-    else tree(ran.nextGaussian(), randomFeature(ran))
+    else Leaf(ran.nextGaussian(), randomFeature(ran))
   }
 
   def randomInitialized(max: Int, ran: Random) : Tree = {
