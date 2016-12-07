@@ -123,7 +123,7 @@ object Tree {
 
   def vectorizeLeaves(t: Tree): ListBuffer[Tree] = {
     t match {
-      case Node(l, r, op) => (new ListBuffer[Tree]() ++: vectorize(l)) ++: vectorize(r)
+      case Node(l, r, op) => (new ListBuffer[Tree]() ++: vectorizeLeaves(l)) ++: vectorizeLeaves(r)
       case Leaf(x, f) => new ListBuffer[Tree]() += t
     }
   }
