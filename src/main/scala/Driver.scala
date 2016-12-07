@@ -8,15 +8,15 @@ object Driver{
 
   val dirPath = "C:/Users/Brent/Documents/School/DataPrac/FinalData/15_min/"
 
-  val tournamentSize = 10
+  val tournamentSize = 5
 
   val ran = new Random(System.currentTimeMillis())
 
-  val populationSize = 250
+  val populationSize = 50
 
-  val maxDepth = 4
+  val maxDepth = 10
 
-  val maxGenerations = 500
+  val maxGenerations = 30
 
   def importFile(year: Int): List[HashMap[String, Double]] = {
     DataPipeline.readFile(dirPath + year.toString + "-1.csv") ++: DataPipeline.readFile(dirPath + year.toString + "-2.csv")
@@ -34,7 +34,7 @@ object Driver{
       (t1: Tree, t2: Tree) =>
         val f1 = findAverageFitness(t1, data)
         val f2 = findAverageFitness(t2, data)
-        if ((f1 < f2 && f1 != Double.NaN) || f2 == Double.NaN) t1
+        if (((f1 < f2 && f1 != Double.NaN) || f2 == Double.NaN) && f1 != 0 ) t1
         else t2
     }
   }
@@ -42,8 +42,12 @@ object Driver{
   def runAux(pop: ListBuffer[Tree], data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, curGen: Int, ran: Random): Tree = {
     println(curGen)
     if (curGen <= maxGen) {
-      if (curGen % 50 == 0) println (findBest(pop, data))
-      val nextGen = nextGeneration(pop, tourSize, data, ran)
+      if (curGen % 5 == 0) {
+        val bb = findBest(pop, data)
+        println(Tree.toString(bb))
+        println(Tree.findAverageFitness(bb, data))
+      }
+      val nextGen: ListBuffer[Tree] = nextGeneration(pop, tourSize, data, ran)
       runAux(nextGen, data, tourSize, maxGen, curGen+1, ran)
     }
     else {

@@ -9,11 +9,12 @@ import scala.util.Random
 object Tree {
 
   abstract class Tree
-  case class Node(left: Tree, right: Tree, op: (Double, Double) => Double) extends Tree
+  case class BinaryNode(left: Tree, right: Tree, op: (Double, Double) => Double) extends Tree
+  case class UnaryNode(child: Tree, op: (Double) => Double) extends Tree
   case class Leaf(x: Double, feature: String) extends Tree
 
   def tree(left: Tree, right: Tree, op: (Double, Double) => Double) : Tree = {
-    Node(left, right, op)
+    BinaryNode(left, right, op)
   }
 
   def tree(x: Double, feature: String): Tree = {
@@ -64,12 +65,12 @@ object Tree {
   }
 
   def toString(t: Tree): String = t match {
-    case Node(l, r, op) => "(" ++ toString(l) ++ " " ++ opToString(op) ++ " " ++ toString(r) ++ ")"
+    case BinaryNode(l, r, op) => "(" ++ toString(l) ++ " " ++ opToString(op) ++ " " ++ toString(r) ++ ")"
     case Leaf(x, f) => x.toString ++ ":" ++ f
   }
 
   def calculateWetBulb(t: Tree, inst: HashMap[String, Double]): Double = t match {
-    case Node(l, r, op) => op (calculateWetBulb(l, inst), calculateWetBulb(r, inst))
+    case BinaryNode(l, r, op) => op (calculateWetBulb(l, inst), calculateWetBulb(r, inst))
     case Leaf(x, f) =>  if (inst.contains(f)) x * inst(f)
                         else 0
   }
@@ -92,38 +93,38 @@ object Tree {
 
   def vectorize(t: Tree): ListBuffer[Tree] = {
     t match {
-      case Node(l, r, op) => (new ListBuffer[Tree]() += t) ++: vectorize(l) ++: vectorize(r)
+      case BinaryNode(l, r, op) => (new ListBuffer[Tree]() += t) ++: vectorize(l) ++: vectorize(r)
       case Leaf(x, f) => new ListBuffer[Tree]() += t
     }
   }
 
-  def randomNode(t : Tree, ran: Random) : Tree = {
-    val nodes = vectorize(t)
-    nodes(ran.nextInt(nodes.size))
+  def randomBinaryNode(t : Tree, ran: Random) : Tree = {
+    val BinaryNodes = vectorize(t)
+    BinaryNodes(ran.nextInt(BinaryNodes.size))
   }
 
-  def combineTrees(t: Tree, oldNode: Tree, newNode: Tree) : Tree = {
-    if (t == oldNode) {
-      newNode
+  def combineTrees(t: Tree, oldBinaryNode: Tree, newBinaryNode: Tree) : Tree = {
+    if (t == oldBinaryNode) {
+      newBinaryNode
     }
     else {
       t match {
-        case Node(l, r, op) =>
-          Node(combineTrees(l, oldNode, newNode), combineTrees(r, oldNode, newNode), op)
+        case BinaryNode(l, r, op) =>
+          BinaryNode(combineTrees(l, oldBinaryNode, newBinaryNode), combineTrees(r, oldBinaryNode, newBinaryNode), op)
         case Leaf(x, f) => t
       }
     }
   }
 
   def crossover(p1: Tree, p2: Tree, ran: Random): Tree = {
-    val node1 = randomNode(p1, ran)
-    val node2 = randomNode(p2, ran)
-    combineTrees(p1, node1, node2)
+    val BinaryNode1 = randomBinaryNode(p1, ran)
+    val BinaryNode2 = randomBinaryNode(p2, ran)
+    combineTrees(p1, BinaryNode1, BinaryNode2)
   }
 
   def vectorizeLeaves(t: Tree): ListBuffer[Tree] = {
     t match {
-      case Node(l, r, op) => (new ListBuffer[Tree]() ++: vectorize(l)) ++: vectorize(r)
+      case BinaryNode(l, r, op) => (new ListBuffer[Tree]() ++: vectorize(l)) ++: vectorize(r)
       case Leaf(x, f) => new ListBuffer[Tree]() += t
     }
   }
