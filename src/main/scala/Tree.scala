@@ -76,7 +76,7 @@ object Tree {
   }
 
   def unRandomOp(ran: Random) : (Double) => Double = {
-    val p = ran.nextInt(7) + 3
+    val p = ran.nextInt(6) + 3
     //if (p == 0) sin
     //else if (p == 1) cos
     //else if (p == 2) tan
@@ -85,18 +85,18 @@ object Tree {
     else if (p == 5) arctan
     else if (p == 6) e
     else if (p == 7) ln
-    else if (p == 8) lg
-    else log
+    else lg
+    //else log
   }
 
   def randomFeature(ran: Random) : String = {
-    val features = List("temp_soil_10cm_C","temp_air_60cm_C","temp_air_2m_C","temp_air_10m_C","rh_2m_pct","temp_dp_2m_C","rain_2m_inches","wind_speed_10m_mph","wind_speed_max_10m_mph","wind_direction_10m_deg","rfd_2m_wm2")
+    val features = List("temp_soil_10cm_C","temp_air_60cm_C","temp_air_2m_C","temp_air_10m_C","rh_2m_pct","temp_dp_2m_C","rain_2m_inches","wind_speed_10m_mph","wind_direction_10m_deg","rfd_2m_wm2")
     features(ran.nextInt(features.length))
   }
 
   def randomInitializedAux(depth : Int, max : Int, ran: Random) : Tree = {
     if (depth < max) {
-      if (ran.nextDouble() <= .5) {
+      if (ran.nextDouble() <= .95) {
         val op = binRandomOp(ran)
         BinaryNode(randomInitializedAux(depth + 1, max, ran), randomInitializedAux(depth + 1, max, ran), op)
       }//if
@@ -173,8 +173,8 @@ object Tree {
 
   def vectorizeLeaves(t: Tree): ListBuffer[Tree] = {
     t match {
-      case BinaryNode(l, r, op) => (new ListBuffer[Tree]() ++: vectorizeLeaves(l)) ++: vectorizeLeaves(r)
-      case UnaryNode(c, op) => new ListBuffer[Tree]() ++: vectorizeLeaves(t)
+      case BinaryNode(l, r, op) => vectorizeLeaves(l) ++: vectorizeLeaves(r)
+      case UnaryNode(c, op) => vectorizeLeaves(t)
       case Leaf(x, f) => new ListBuffer[Tree]() += t
     }
   }
@@ -234,22 +234,25 @@ object Tree {
     else new ListBuffer[Tree]()
   }
 
-  def replaceIndividual(pop: ListBuffer[Tree], oldTree: Tree, newTree: Tree): ListBuffer[Tree] = {
+  def replaceIndividual(pop: ListBuffer[Tree], oldTree: Tree, newTree: Tree, insts: List[HashMap[String, Double]]): ListBuffer[Tree] = {
     pop.map({ t =>
-      if (t == oldTree) newTree
+      if (t == oldTree && (findAverageFitness(newTree, insts) != Double.NaN || findAverageFitness(oldTree, insts) == Double.NaN))
+        newTree
       else t
     })
   }
 
   def birthIndividual(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], ran: Random): Tree = {
     val baby = intercourse(pop, tourSize, insts, ran)
-    if (ran.nextDouble() <= .05) mutate(baby, ran)
+    println("baby!\n" ++ Tree.toString(baby) ++ "\n" ++ Tree.findAverageFitness(baby, insts).toString)
+    if (ran.nextDouble() <= .1) mutate(baby, ran)
     else baby
   }
   
   def eugenics(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], newTree: Tree, ran: Random): ListBuffer[Tree] = {
     val weak = deathSelection(pop, tourSize, insts, ran)
-    replaceIndividual(pop, weak, newTree)
+    println("UNDESIRABLE: \n" ++ Tree.toString(weak) ++ "\n" ++ Tree.findAverageFitness(weak, insts).toString)
+    replaceIndividual(pop, weak, newTree, insts)
   }
 
   def nextGeneration(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], ran: Random): ListBuffer[Tree] = {
