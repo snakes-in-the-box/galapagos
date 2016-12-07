@@ -96,7 +96,7 @@ object Tree {
 
   def randomInitializedAux(depth : Int, max : Int, ran: Random) : Tree = {
     if (depth < max) {
-      if (ran.nextDouble() <= .95) {
+      if (ran.nextDouble() <= .90) {
         val op = binRandomOp(ran)
         BinaryNode(randomInitializedAux(depth + 1, max, ran), randomInitializedAux(depth + 1, max, ran), op)
       }//if
@@ -205,7 +205,7 @@ object Tree {
       (t1: Tree, t2: Tree) =>
         val f1 = findAverageFitness(t1, insts)
         val f2 = findAverageFitness(t2, insts)
-        if (f1 < f2 || f2 == Double.NaN) t1
+        if (f1 < f2 || f2.isNaN) t1
         else t2
       }
   }
@@ -216,7 +216,7 @@ object Tree {
       (t1: Tree, t2: Tree) =>
         val f1 = findAverageFitness(t1, insts)
         val f2 = findAverageFitness(t2, insts)
-        if (f1 > f2 || f1 == Double.NaN) t1
+        if (f1 > f2 || f1.isNaN) t1
         else t2
     }
   }
@@ -236,7 +236,7 @@ object Tree {
 
   def replaceIndividual(pop: ListBuffer[Tree], oldTree: Tree, newTree: Tree, insts: List[HashMap[String, Double]]): ListBuffer[Tree] = {
     pop.map({ t =>
-      if (t == oldTree && (findAverageFitness(newTree, insts) != Double.NaN || findAverageFitness(oldTree, insts) == Double.NaN))
+      if (t == oldTree && !(findAverageFitness(newTree, insts).isNaN || findAverageFitness(oldTree, insts).isNaN))
         newTree
       else t
     })
