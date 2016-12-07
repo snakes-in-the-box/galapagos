@@ -12,9 +12,9 @@ object Driver{
 
   val ran = new Random(System.currentTimeMillis())
 
-  val populationSize = 50
+  val populationSize = 20
 
-  val maxDepth = 10
+  val maxDepth = 4
 
   val maxGenerations = 30
 

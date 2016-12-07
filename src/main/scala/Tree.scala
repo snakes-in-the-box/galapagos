@@ -76,16 +76,16 @@ object Tree {
   }
 
   def unRandomOp(ran: Random) : (Double) => Double = {
-    val p = ran.nextInt(9)
-    if (p == 0) sin
-    else if (p == 1) cos
-    else if (p == 2) tan
-    else if (p == 3) arcsin
+    val p = ran.nextInt(7) + 3
+    //if (p == 0) sin
+    //else if (p == 1) cos
+    //else if (p == 2) tan
+    if (p == 3) arcsin
     else if (p == 4) arccos
     else if (p == 5) arctan
     else if (p == 6) e
-    else if (p ==6) ln
-    else if (p == 7) lg
+    else if (p == 7) ln
+    else if (p == 8) lg
     else log
   }
 
