@@ -99,6 +99,7 @@ object Tree {
 
   def calculateWetBulb(t: Tree, inst: HashMap[String, Double]): Double = t match {
     case BinaryNode(l, r, op) => op (calculateWetBulb(l, inst), calculateWetBulb(r, inst))
+    case UnaryNode(c, op) => op (calculateWetBulb(c, inst))
     case Leaf(x, f) =>  if (inst.contains(f)) x * inst(f)
                         else 0
   }
