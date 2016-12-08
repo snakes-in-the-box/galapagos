@@ -62,7 +62,7 @@ object Driver{
 
   def main(args:Array[String]):Unit={
 
-    val data = importData(2016, 2016).filter( inst => !inst.isEmpty )
+    val data = importData(2016, 2016).filter( inst => inst.nonEmpty )
     val pop = initializePopulation(populationSize, maxDepth, ran)
     val popRDD = sc.parallelize(pop.sliding(pop.size/4).toSeq)
     val runRDD = popRDD.map( pop => run(pop, maxDepth, data, tournamentSize, maxGenerations, ran))

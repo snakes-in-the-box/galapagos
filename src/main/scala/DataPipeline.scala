@@ -51,7 +51,7 @@ object DataPipeline {
     val fileList = src.getLines().toList
     val indexes = indexColumns(fileList.head)
     val instances = fileList.drop(1)
-    instances.map( s => addGroundTruth(hashInstance(s, indexes)))
+    instances.map( s => addGroundTruth(hashInstance(s, indexes))).filter( (inst) => inst.nonEmpty && inst.contains("wet-bulb"))
   }
 
 }
