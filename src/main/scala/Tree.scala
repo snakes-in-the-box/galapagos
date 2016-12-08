@@ -132,8 +132,9 @@ object Tree {
   def sumAverages(t: Tree, insts: List[HashMap[String, Double]]) : (Double, Double) = {
     val avgs = insts.map(
       inst => findInstanceFitness(t, inst)
-    ).filterNot( d => d.isNaN )
+    ).filterNot( d => d.isNaN || d == 0.0 )
     val penalty = insts.size - avgs.size
+    println("insts: " ++ insts.size.toString ++ " avgs: " ++ avgs.size.toString)
     (avgs.sum + penalty, avgs.size)
   }
 
