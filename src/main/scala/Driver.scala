@@ -8,11 +8,11 @@ object Driver{
 
   val dirPath = "C:/Users/Brent/Documents/School/DataPrac/FinalData/15_min/"
 
-  val tournamentSize = 10
+  val tournamentSize = 3
 
   val ran = new Random(System.currentTimeMillis())
 
-  val populationSize = 100
+  val populationSize = 20
 
   val maxDepth = 5
 

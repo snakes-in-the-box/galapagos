@@ -129,15 +129,16 @@ object Tree {
     else 0
   }
 
-  def sumAverages(t: Tree, insts: List[HashMap[String, Double]]) : Double = {
-    insts.map(
+  def sumAverages(t: Tree, insts: List[HashMap[String, Double]]) : (Double, Double) = {
+    val avgs = insts.map(
       inst => findInstanceFitness(t, inst)
-    ).filterNot( d => d.isNaN ).sum
+    ).filterNot( d => d.isNaN )
+    (avgs.sum, avgs.size)
   }
 
   def findAverageFitness(t: Tree, insts: List[HashMap[String, Double]]): Double = {
-    val sum = sumAverages(t, insts)
-    sum / insts.size:Double
+    val (sum, size) = sumAverages(t, insts)
+    sum / size
   }
 
   def vectorize(t: Tree): ListBuffer[Tree] = {
