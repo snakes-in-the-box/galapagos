@@ -8,15 +8,19 @@ object Driver{
 
   val dirPath = "C:/Users/Brent/Documents/School/DataPrac/FinalData/15_min/"
 
-  val tournamentSize = 10
+  val tournamentSize = 3
 
   val ran = new Random(System.currentTimeMillis())
 
   val populationSize = 20
 
-  val maxDepth = 4
+  val maxDepth = 5
 
+<<<<<<< HEAD
   val maxGenerations = 50
+=======
+  val maxGenerations = 100
+>>>>>>> refs/remotes/origin/unary
 
   def importFile(year: Int): List[HashMap[String, Double]] = {
     DataPipeline.readFile(dirPath + year.toString + "-1.csv") ++: DataPipeline.readFile(dirPath + year.toString + "-2.csv")
@@ -34,20 +38,49 @@ object Driver{
       (t1: Tree, t2: Tree) =>
         val f1 = findAverageFitness(t1, data)
         val f2 = findAverageFitness(t2, data)
+<<<<<<< HEAD
         if ((f1 < f2 && !f1.isNaN) || f2.isNaN) t1
+=======
+        //println("\nt1: " ++ Tree.toString(t1))
+        //println("f1: " ++ f1.toString)
+        //println("t2: " ++ Tree.toString(t2))
+        //println("f2: " ++ f2.toString ++ "\n")
+        //println("f1 NaN: " ++ (f1.isNaN).toString)
+        //println("f2 NaN: " ++ (f2.isNaN).toString)
+        if ((f1 < f2 && !f1.isNaN && f1 != 0.0) || f2.isNaN) t1
+>>>>>>> refs/remotes/origin/unary
         else t2
     }
   }
 
   def runAux(pop: ListBuffer[Tree], data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, curGen: Int, ran: Random): Tree = {
-    println(curGen)
+    println("\n" ++ curGen.toString)
+    /*pop.foldLeft(pop.head)( (t1, t2) => { println(Tree.toString(t1))
+                                        println(Tree.findAverageFitness(t1, data))
+                                        t2})*/
     if (curGen <= maxGen) {
       if (curGen % 10 == 0) {
+<<<<<<< HEAD
         val bb = findBest(pop, data)
         println(Tree.toString(bb))
         println(Tree.findAverageFitness(bb, data))
       }//if
       val nextGen = nextGeneration(pop, tourSize, data, ran)
+=======
+        /*val last = pop.foldLeft(pop.head)( (t1, t2) => {
+          if (t1 != t2) {
+            println(Tree.toString(t1))
+            println(Tree.findAverageFitness(t1, data))
+          }//if
+          t2})
+        println(Tree.toString(last))
+        println(Tree.findAverageFitness(last, data))*/
+        val bb = findBest(pop, data)
+        println("\nBest:\n" ++ Tree.toString(bb))
+        println(Tree.findAverageFitness(bb, data).toString ++ "\n")
+      }
+      val nextGen: ListBuffer[Tree] = nextGeneration(pop, tourSize, data, ran)
+>>>>>>> refs/remotes/origin/unary
       runAux(nextGen, data, tourSize, maxGen, curGen+1, ran)
     }
     else {

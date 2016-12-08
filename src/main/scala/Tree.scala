@@ -1,6 +1,8 @@
 
+import scala.collection.mutable
 import scala.collection.mutable.{HashMap, ListBuffer}
 import scala.util.Random
+
 
 
 /**
@@ -8,17 +10,12 @@ import scala.util.Random
   */
 object Tree {
 
+  val percentBinary = .75
+
   abstract class Tree
-  case class Node(left: Tree, right: Tree, op: (Double, Double) => Double) extends Tree
+  case class BinaryNode(left: Tree, right: Tree, op: (Double, Double) => Double) extends Tree
+  case class UnaryNode(child: Tree, op: (Double) => Double) extends Tree
   case class Leaf(x: Double, feature: String) extends Tree
-
-  def tree(left: Tree, right: Tree, op: (Double, Double) => Double) : Tree = {
-    Node(left, right, op)
-  }
-
-  def tree(x: Double, feature: String): Tree = {
-    Leaf(x, feature)
-  }
 
   val add = (a : Double, b : Double) => a + b
 
@@ -30,7 +27,27 @@ object Tree {
 
   val pow = (a : Double, b : Double) => Math.pow(a,b)
 
-  def opToString(op : (Double, Double) => Double): String = {
+  val sin = (x: Double) => Math.sin(x)
+
+  val cos = (x: Double) => Math.cos(x)
+
+  val tan = (x: Double) => Math.tan(x)
+
+  val arcsin = (x: Double) => Math.asin(x)
+
+  val arccos = (x: Double) => Math.acos(x)
+
+  val arctan = (x: Double) => Math.atan(x)
+
+  val e = (x: Double) => x * Math.E
+
+  val ln = (x: Double) => Math.log(x)
+
+  val lg = (x: Double) => Math.log(x) / Math.log(2.0)
+
+  val log = (x: Double) => Math.log10(x)
+
+  def binOpToString(op : (Double, Double) => Double): String = {
     if (op == add) "+"
     else if (op == sub) "-"
     else if (op == multiply) "*"
@@ -38,12 +55,40 @@ object Tree {
     else "NULL"
   }
 
-  def randomOp(ran: Random) : (Double, Double) => Double = {
+  def binRandomOp(ran: Random) : (Double, Double) => Double = {
     val p = ran.nextDouble()
     if (p < .25) add
     else if (p < .5) sub
     else if (p < .75) multiply
     else divide
+  }
+
+  def unOpToString(op : (Double) => Double): String = {
+    if (op == sin) "sin"
+    else if (op == cos) "cos"
+    else if (op == tan) "tan"
+    else if (op == arcsin) "arcsin"
+    else if (op == arccos) "arccos"
+    else if (op == arctan) "arctan"
+    else if (op == e) "e"
+    else if (op == ln) "ln"
+    else if (op == lg) "lg"
+    else if (op == log) "log"
+    else "NULL"
+  }
+
+  def unRandomOp(ran: Random) : (Double) => Double = {
+    val p = ran.nextInt(10)
+    if (p == 0) sin
+    else if (p == 1) cos
+    else if (p == 2) tan
+    else if (p == 3) arcsin
+    else if (p == 4) arccos
+    else if (p == 5) arctan
+    else if (p == 6) e
+    else if (p == 7) ln
+    else if (p == 8) lg
+    else log
   }
 
   def randomFeature(ran: Random) : String = {
@@ -53,10 +98,13 @@ object Tree {
 
   def randomInitializedAux(depth : Int, max : Int, ran: Random) : Tree = {
     if (depth < max) {
-      val op = randomOp(ran)
-      tree(randomInitializedAux(depth+1, max, ran), randomInitializedAux(depth+1, max, ran), op)
+      if (ran.nextDouble() <= percentBinary) {
+        val op = binRandomOp(ran)
+        BinaryNode(randomInitializedAux(depth + 1, max, ran), randomInitializedAux(depth + 1, max, ran), op)
+      }//if
+      else UnaryNode(randomInitializedAux(depth + 1, max, ran), unRandomOp(ran))
     }
-    else tree(ran.nextGaussian(), randomFeature(ran))
+    else Leaf(ran.nextGaussian(), randomFeature(ran))
   }
 
   def randomInitialized(max: Int, ran: Random) : Tree = {
@@ -64,12 +112,14 @@ object Tree {
   }
 
   def toString(t: Tree): String = t match {
-    case Node(l, r, op) => "(" ++ toString(l) ++ " " ++ opToString(op) ++ " " ++ toString(r) ++ ")"
+    case BinaryNode(l, r, op) => "(" ++ toString(l) ++ " " ++ binOpToString(op) ++ " " ++ toString(r) ++ ")"
+    case UnaryNode(c, op) => "(" ++ unOpToString(op) ++ "( " ++ toString(c) ++ " )" ++ ")"
     case Leaf(x, f) => x.toString ++ ":" ++ f
   }
 
   def calculateWetBulb(t: Tree, inst: HashMap[String, Double]): Double = t match {
-    case Node(l, r, op) => op (calculateWetBulb(l, inst), calculateWetBulb(r, inst))
+    case BinaryNode(l, r, op) => op (calculateWetBulb(l, inst), calculateWetBulb(r, inst))
+    case UnaryNode(c, op) => op (calculateWetBulb(c, inst))
     case Leaf(x, f) =>  if (inst.contains(f)) x * inst(f)
                         else 0
   }
@@ -79,20 +129,24 @@ object Tree {
     else 0
   }
 
-  def sumAverages(t: Tree, insts: List[HashMap[String, Double]]) : Double = {
-    insts.map(
+  def sumAverages(t: Tree, insts: List[HashMap[String, Double]]) : (Double, Double) = {
+    val avgs = insts.map(
       inst => findInstanceFitness(t, inst)
-    ).sum
+    ).filterNot( d => d.isNaN || d == 0 )
+    val penalty = insts.size - avgs.size
+    //println("insts: " ++ insts.size.toString ++ " avgs: " ++ avgs.size.toString)
+    (avgs.sum + penalty, avgs.size)
   }
 
   def findAverageFitness(t: Tree, insts: List[HashMap[String, Double]]): Double = {
-    val sum = sumAverages(t, insts)
-    sum / insts.size:Double
+    val (sum, size) = sumAverages(t, insts)
+    sum / size
   }
 
   def vectorize(t: Tree): ListBuffer[Tree] = {
     t match {
-      case Node(l, r, op) => (new ListBuffer[Tree]() += t) ++: vectorize(l) ++: vectorize(r)
+      case UnaryNode(c, op) => (new ListBuffer[Tree]() += t) ++: vectorize(c)
+      case BinaryNode(l, r, op) => (new ListBuffer[Tree]() += t) ++: vectorize(l) ++: vectorize(r)
       case Leaf(x, f) => new ListBuffer[Tree]() += t
     }
   }
@@ -108,8 +162,9 @@ object Tree {
     }
     else {
       t match {
-        case Node(l, r, op) =>
-          Node(combineTrees(l, oldNode, newNode), combineTrees(r, oldNode, newNode), op)
+        case BinaryNode(l, r, op) =>
+          BinaryNode(combineTrees(l, oldNode, newNode), combineTrees(r, oldNode, newNode), op)
+        case UnaryNode(c, op) => UnaryNode(combineTrees(c, oldNode, newNode), op)
         case Leaf(x, f) => t
       }
     }
@@ -123,7 +178,12 @@ object Tree {
 
   def vectorizeLeaves(t: Tree): ListBuffer[Tree] = {
     t match {
+<<<<<<< HEAD
       case Node(l, r, op) => (new ListBuffer[Tree]() ++: vectorizeLeaves(l)) ++: vectorizeLeaves(r)
+=======
+      case BinaryNode(l, r, op) => vectorizeLeaves(l) ++: vectorizeLeaves(r)
+      case UnaryNode(c, op) => vectorizeLeaves(t)
+>>>>>>> refs/remotes/origin/unary
       case Leaf(x, f) => new ListBuffer[Tree]() += t
     }
   }
@@ -154,7 +214,11 @@ object Tree {
       (t1: Tree, t2: Tree) =>
         val f1 = findAverageFitness(t1, insts)
         val f2 = findAverageFitness(t2, insts)
+<<<<<<< HEAD
         if (f1 < f2 || f2.isNaN) t1
+=======
+        if ( (f1 < f2 && f1 != 0.0) || f2.isNaN) t1
+>>>>>>> refs/remotes/origin/unary
         else t2
       }
   }
@@ -183,22 +247,25 @@ object Tree {
     else new ListBuffer[Tree]()
   }
 
-  def replaceIndividual(pop: ListBuffer[Tree], oldTree: Tree, newTree: Tree): ListBuffer[Tree] = {
+  def replaceIndividual(pop: ListBuffer[Tree], oldTree: Tree, newTree: Tree, insts: List[HashMap[String, Double]]): ListBuffer[Tree] = {
     pop.map({ t =>
-      if (t == oldTree) newTree
+      if (t == oldTree && !(findAverageFitness(newTree, insts).isNaN || findAverageFitness(oldTree, insts).isNaN))
+        newTree
       else t
     })
   }
 
   def birthIndividual(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], ran: Random): Tree = {
     val baby = intercourse(pop, tourSize, insts, ran)
-    if (ran.nextDouble() <= .05) mutate(baby, ran)
+    println("baby!\n" ++ Tree.toString(baby) ++ "\n" ++ Tree.findAverageFitness(baby, insts).toString)
+    if (ran.nextDouble() <= .1) mutate(baby, ran)
     else baby
   }
   
   def eugenics(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], newTree: Tree, ran: Random): ListBuffer[Tree] = {
     val weak = deathSelection(pop, tourSize, insts, ran)
-    replaceIndividual(pop, weak, newTree)
+    println("UNDESIRABLE: \n" ++ Tree.toString(weak) ++ "\n" ++ Tree.findAverageFitness(weak, insts).toString)
+    replaceIndividual(pop, weak, newTree, insts)
   }
 
   def nextGeneration(pop: ListBuffer[Tree], tourSize: Int, insts: List[HashMap[String, Double]], ran: Random): ListBuffer[Tree] = {
