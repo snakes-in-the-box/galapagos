@@ -27,6 +27,9 @@ object DataPipeline {
     if (i < s.length && Try(s(i).toDouble).isSuccess) {
       (new HashMap[String, Double]() += (indexes(i) -> s(i).toDouble)) ++: hashInstanceAux(s, i+1, indexes)
     }
+    else if (i < s.length && s(i).equals("")) {
+      (new HashMap[String, Double]() += (indexes(i) -> 0.0)) ++: hashInstanceAux(s, i+1, indexes)
+    }
     else if (i < s.length) hashInstanceAux(s, i+1, indexes)
     else new HashMap[String, Double]()
   }
@@ -51,7 +54,11 @@ object DataPipeline {
     val fileList = src.getLines().toList
     val indexes = indexColumns(fileList.head)
     val instances = fileList.drop(1)
+<<<<<<< HEAD
     instances.map( s => addGroundTruth(hashInstance(s, indexes))).filter( (inst) => inst.nonEmpty && inst.contains("wet-bulb"))
+=======
+    instances.map( s => addGroundTruth(hashInstance(s, indexes))).filter( (inst) => inst.nonEmpty && inst.contains("wet-bulb") )
+>>>>>>> refs/remotes/origin/unary
   }
 
 }
