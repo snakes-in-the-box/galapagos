@@ -1,10 +1,18 @@
-import scala.collection.mutable.{HashMap, ListBuffer}
-import DataPipeline._
-import Tree._
+import Tree.Tree
 
+import scala.collection.mutable
 import scala.util.Random
+import org.apache.spark._
+import org.apache.spark.rdd.RDD
+import org.apache.hadoop.mapred._
+
+import scala.collection.mutable.HashMap
+import scala.collection.mutable.ListBuffer
 
 object Driver{
+
+  val sparkConf = new SparkConf().setAppName("BlkFish")
+  val sc = new SparkContext(sparkConf)
 
   val dirPath = "C:/Users/Brent/Documents/School/DataPrac/FinalData/15_min/"
 
@@ -32,17 +40,14 @@ object Driver{
   def findBest(pop: ListBuffer[Tree], data: List[HashMap[String, Double]]): Tree = {
     pop.foldLeft(pop.head) {
       (t1: Tree, t2: Tree) =>
-        val f1 = findAverageFitness(t1, data)
-        val f2 = findAverageFitness(t2, data)
-<<<<<<< HEAD
-=======
+        val f1 = Tree.findAverageFitness(t1, data)
+        val f2 = Tree.findAverageFitness(t2, data)
         //println("\nt1: " ++ Tree.toString(t1))
         //println("f1: " ++ f1.toString)
         //println("t2: " ++ Tree.toString(t2))
         //println("f2: " ++ f2.toString ++ "\n")
         //println("f1 NaN: " ++ (f1.isNaN).toString)
         //println("f2 NaN: " ++ (f2.isNaN).toString)
->>>>>>> refs/remotes/origin/unary
         if ((f1 < f2 && !f1.isNaN && f1 != 0.0) || f2.isNaN) t1
         else t2
     }
@@ -67,7 +72,7 @@ object Driver{
         println("\nBest:\n" ++ Tree.toString(bb))
         println(Tree.findAverageFitness(bb, data).toString ++ "\n")
       }
-      val nextGen: ListBuffer[Tree] = nextGeneration(pop, tourSize, data, ran)
+      val nextGen: ListBuffer[Tree] = Tree.nextGeneration(pop, tourSize, data, ran)
       runAux(nextGen, data, tourSize, maxGen, curGen+1, ran)
     }
     else {
@@ -75,29 +80,23 @@ object Driver{
     }
   }
 
-  def run(popSize: Int, maxDepth: Int, data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, ran: Random): Tree = {
-    val pop = initializePopulation(popSize, maxDepth, ran)
+  def run(pop: ListBuffer[Tree], maxDepth: Int, data: List[HashMap[String, Double]], tourSize: Int, maxGen: Int, ran: Random): Tree = {
     runAux(pop, data, tourSize, maxGen, 0, ran)
   }
 
   def main(args:Array[String]):Unit={
 
-<<<<<<< HEAD
     val data = importData(2016, 2016).filter( inst => inst.nonEmpty )
-    val pop = initializePopulation(populationSize, maxDepth, ran)
+    val pop = Tree.initializePopulation(populationSize, maxDepth, ran)
     val popRDD = sc.parallelize(pop.sliding(pop.size/4).toSeq)
     val runRDD = popRDD.map( pop => run(pop, maxDepth, data, tournamentSize, maxGenerations, ran))
     val result = runRDD.reduce({ (t1, t2) =>
-      val f1 = findAverageFitness(t1, data)
-      val f2 = findAverageFitness(t2, data)
+      val f1 = Tree.findAverageFitness(t1, data)
+      val f2 = Tree.findAverageFitness(t2, data)
       if (f1 < f2 && !f1.isNaN) t1
       else t2
     })
-=======
-    val data = importData(2016, 2016).filter( inst => !inst.isEmpty )
-    val result = run(populationSize, maxDepth, data, tournamentSize, maxGenerations, ran)
->>>>>>> refs/remotes/origin/unary
     println(Tree.toString(result))
-    println(findAverageFitness(result, data))
+    println(Tree.findAverageFitness(result, data))
   }
 }

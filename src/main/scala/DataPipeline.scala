@@ -54,11 +54,7 @@ object DataPipeline {
     val fileList = src.getLines().toList
     val indexes = indexColumns(fileList.head)
     val instances = fileList.drop(1)
-<<<<<<< HEAD
     instances.map( s => addGroundTruth(hashInstance(s, indexes))).filter( (inst) => inst.nonEmpty && inst.contains("wet-bulb"))
-=======
-    instances.map( s => addGroundTruth(hashInstance(s, indexes))).filter( (inst) => inst.nonEmpty && inst.contains("wet-bulb") )
->>>>>>> refs/remotes/origin/unary
   }
 
 }
