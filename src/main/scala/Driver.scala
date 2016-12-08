@@ -42,7 +42,7 @@ object Driver{
       (t1: Tree, t2: Tree) =>
         val f1 = findAverageFitness(t1, data)
         val f2 = findAverageFitness(t2, data)
-        if ((f1 < f2 && !f1.isNaN) || f2.isNaN) t1
+        if ((f1 < f2 && !f1.isNaN && f1 != 0.0) || f2.isNaN) t1
         else t2
     }
   }
