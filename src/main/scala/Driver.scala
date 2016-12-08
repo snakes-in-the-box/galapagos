@@ -40,7 +40,7 @@ object Driver{
         //println("f2: " ++ f2.toString ++ "\n")
         //println("f1 NaN: " ++ (f1.isNaN).toString)
         //println("f2 NaN: " ++ (f2.isNaN).toString)
-        if ((f1 < f2 && !f1.isNaN) || f2.isNaN) t1
+        if ((f1 < f2 && !f1.isNaN && f1 != 0.0) || f2.isNaN) t1
         else t2
     }
   }
