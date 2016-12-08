@@ -132,7 +132,7 @@ object Tree {
   def sumAverages(t: Tree, insts: List[HashMap[String, Double]]) : Double = {
     insts.map(
       inst => findInstanceFitness(t, inst)
-    ).sum
+    ).filterNot( d => d.isNaN ).sum
   }
 
   def findAverageFitness(t: Tree, insts: List[HashMap[String, Double]]): Double = {
