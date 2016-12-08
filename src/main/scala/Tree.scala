@@ -133,7 +133,8 @@ object Tree {
     val avgs = insts.map(
       inst => findInstanceFitness(t, inst)
     ).filterNot( d => d.isNaN )
-    (avgs.sum, avgs.size)
+    val penalty = insts.size - avgs.size
+    (avgs.sum + penalty, avgs.size)
   }
 
   def findAverageFitness(t: Tree, insts: List[HashMap[String, Double]]): Double = {
