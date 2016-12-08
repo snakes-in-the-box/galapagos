@@ -178,12 +178,8 @@ object Tree {
 
   def vectorizeLeaves(t: Tree): ListBuffer[Tree] = {
     t match {
-<<<<<<< HEAD
-      case Node(l, r, op) => (new ListBuffer[Tree]() ++: vectorizeLeaves(l)) ++: vectorizeLeaves(r)
-=======
       case BinaryNode(l, r, op) => vectorizeLeaves(l) ++: vectorizeLeaves(r)
       case UnaryNode(c, op) => vectorizeLeaves(t)
->>>>>>> refs/remotes/origin/unary
       case Leaf(x, f) => new ListBuffer[Tree]() += t
     }
   }
@@ -214,11 +210,7 @@ object Tree {
       (t1: Tree, t2: Tree) =>
         val f1 = findAverageFitness(t1, insts)
         val f2 = findAverageFitness(t2, insts)
-<<<<<<< HEAD
-        if (f1 < f2 || f2.isNaN) t1
-=======
         if ( (f1 < f2 && f1 != 0.0) || f2.isNaN) t1
->>>>>>> refs/remotes/origin/unary
         else t2
       }
   }
