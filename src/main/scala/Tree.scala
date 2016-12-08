@@ -10,6 +10,8 @@ import scala.util.Random
   */
 object Tree {
 
+  val percentBinary = .9
+
   abstract class Tree
   case class BinaryNode(left: Tree, right: Tree, op: (Double, Double) => Double) extends Tree
   case class UnaryNode(child: Tree, op: (Double) => Double) extends Tree
@@ -76,17 +78,17 @@ object Tree {
   }
 
   def unRandomOp(ran: Random) : (Double) => Double = {
-    val p = ran.nextInt(6) + 3
-    //if (p == 0) sin
-    //else if (p == 1) cos
-    //else if (p == 2) tan
-    if (p == 3) arcsin
+    val p = ran.nextInt(10)
+    if (p == 0) sin
+    else if (p == 1) cos
+    else if (p == 2) tan
+    else if (p == 3) arcsin
     else if (p == 4) arccos
     else if (p == 5) arctan
     else if (p == 6) e
     else if (p == 7) ln
-    else lg
-    //else log
+    else if (p == 8) lg
+    else log
   }
 
   def randomFeature(ran: Random) : String = {

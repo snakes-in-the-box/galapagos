@@ -8,15 +8,15 @@ object Driver{
 
   val dirPath = "C:/Users/Brent/Documents/School/DataPrac/FinalData/15_min/"
 
-  val tournamentSize = 2
+  val tournamentSize = 5
 
   val ran = new Random(System.currentTimeMillis())
 
-  val populationSize = 10
+  val populationSize = 50
 
-  val maxDepth = 3
+  val maxDepth = 4
 
-  val maxGenerations = 50
+  val maxGenerations = 100
 
   def importFile(year: Int): List[HashMap[String, Double]] = {
     DataPipeline.readFile(dirPath + year.toString + "-1.csv") ++: DataPipeline.readFile(dirPath + year.toString + "-2.csv")
