@@ -10,7 +10,7 @@ import scala.util.Random
   */
 object Tree {
 
-  val percentBinary = .9
+  val percentBinary = .75
 
   abstract class Tree
   case class BinaryNode(left: Tree, right: Tree, op: (Double, Double) => Double) extends Tree
@@ -98,7 +98,7 @@ object Tree {
 
   def randomInitializedAux(depth : Int, max : Int, ran: Random) : Tree = {
     if (depth < max) {
-      if (ran.nextDouble() <= .90) {
+      if (ran.nextDouble() <= percentBinary) {
         val op = binRandomOp(ran)
         BinaryNode(randomInitializedAux(depth + 1, max, ran), randomInitializedAux(depth + 1, max, ran), op)
       }//if
